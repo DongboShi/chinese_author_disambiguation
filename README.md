@@ -125,19 +125,22 @@ JCDL 09: PROCEEDINGS OF THE 2009 ACM/IEEE JOINT CONFERENCE ON DIGITAL LIBRARIES 
 作者: Kim, Jinseok; Diesner, Jana
 JOURNAL OF THE ASSOCIATI
 
-20. *Counting First, Last, or All Authors in Citation Analysis: A Comprehensive Comparison in the Highly Collaborative Stem Cell Research Field*
+20. **Counting First, Last, or All Authors in Citation Analysis: A Comprehensive Comparison in the Highly Collaborative Stem Cell Research Field**
 作者: Zhao, Dangzhi; Strotmann, Andreas
 JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 62   期: 4   页: 654-676   出版年: APR 2011
 
-21. *A boosted-trees method for name disambiguation*
+21. **A boosted-trees method for name disambiguation**
 作者: Wang, Jian; Berzins, Kaspars; Hicks, Diana; 等.
 SCIENTOMETRICS   卷: 93   期: 2   页: 391-411   出版年: NOV 2012
 Two supervised learning approaches for name disambiguation in author citations
 
-22. Construction of a large-scale test set for author disambiguation
+22. **Construction of a large-scale test set for author disambiguation**
 作者: Kang, In-Su; Kim, Pyung; Lee, Seungwoo; 等.
 INFORMATION PROCESSING & MANAGEMENT   卷: 47   期: 3   页: 452-465   出版年: MAY 2011
 
+23. Dynamic author name disambiguation for growing digital libraries
+作者: Qian, Yanan; Zheng, Qinghua; Sakai, Tetsuya; 等.
+INFORMATION RETRIEVAL   卷: 18   期: 5   页: 379-412   出版年: OCT 2015
 
 
 
