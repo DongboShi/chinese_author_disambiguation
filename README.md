@@ -30,7 +30,7 @@ randomforest
 1. 通过模型预测出每一对pair之间的similarity
 2. 通过dbscan聚类
 3. 通过cv vote出最符合cv特征的一个cluster
-4. 定义超参数$\beta_1$ 计算cluster内部
+4. 定义超参数$\beta$ 计算cluster内部
 
 #### 不适用cv的聚类方法
 
