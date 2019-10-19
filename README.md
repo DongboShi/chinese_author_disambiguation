@@ -342,8 +342,6 @@ JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 62
 SCIENTOMETRICS   卷: 93   期: 2   页: 391-411   出版年: NOV 2012
 思路是用于给特定科学家赋值
 
-Two supervised learning approaches for name disambiguation in author citations
-
 
 22. **Construction of a large-scale test set for author disambiguation**
 作者: Kang, In-Su; Kim, Pyung; Lee, Seungwoo; 等.
