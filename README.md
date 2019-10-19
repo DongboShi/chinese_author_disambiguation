@@ -219,6 +219,50 @@ IDF(lnameA) = IDF(lnameB) = L/DFlnameA
 
 **Affiliation Similarity** 类别 
 
+6. the jaccard similarity between affA and affB
+
+$$aff_jac = \frac{|affA \cap affB|}{|affA| + |affB|}$$
+
+7. the sum of TFIDF weights of shared terms in affA and affB.
+
+$$aff\_tfidf = \sigma TFIDF(t, affA)×TFIDF(t, affB) $$
+
+where TFIDF(t,S) = log(TF(t,S) + 1) × log(IDF(t)), and TF(t,S) is the frequency of t in S.
+
+8. the soft-TFIDF distance between affA and affB. This is a little bit complicated. It combines the string distance and idf wwights.
+
+https://github.com/anhaidgroup/py_stringmatching/blob/master/py_stringmatching/similarity_measure/soft_tfidf.py
+参考此处的函数
+
+**coauthor 类**
+
+9. coauth\_lname\_shared : the number of shared coauthor last names between the two papers.
+
+$$coauth\_lname\_shared = |coauthA \cap coauthB|
+
+10. coauth\_lname\_idf : the sum of IDF values of all shared coauthor last names.
+
+$$coauth\_lname\_idf = \sigma log(IDF(ln))
+
+11. the jaccard similarity between coauthA and coauthB 
+
+$$coauth\_lname\_jac = \frac{|coauthA \cap coauthB |}{|coauthA|+|coauthB|} $$
+
+**concept 类** 原文中使用的pubmed中的 mesh 我们需要使keyword
+
+12. the number of shared mesh terms between the two papers
+
+$$mesh\_shared = |meshA \cap meshB|$$
+
+13. the sum of IDF values of all shared mesh terms
+
+$$mesh\_shared\_idf = sigma log(IDF(t))$$
+
+14.15无法使用
+
+**journal 类**
+
+
 
 
 15. Accuracy of simple, initials-based methods for author name disambiguation
