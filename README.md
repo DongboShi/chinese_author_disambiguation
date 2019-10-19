@@ -140,10 +140,13 @@ meshi = set of mesh terms in the paperi
 feature
 
 **author 类** 使用上了论文本身的作者信息
+
 1. firstname similarity
 
 $$auth\_fst = \left\{
+
 \begin{aligned}
+
 0 if fnameA \neq fnameB and both are fullname \\
 
 1 if initA \neq initB and are not both fullname\\
@@ -153,11 +156,15 @@ $$auth\_fst = \left\{
 3 if fnameA = fnameB and both are fullname\\
 
 \end{aligned}
+
 \right$$
 
 2. middle name similarity
+
 $$auth\_mid = \left\{
+
 \begin{aligned}
+
 0 if midA, midB are given, and midA \neq midB \\
 
 1 if both midA, midB are not given \\
@@ -167,7 +174,51 @@ $$auth\_mid = \left\{
 3 if midA, midB are given, and midA = midB\\
 
 \end{aligned}
+
 \right$$
+
+3. auth suf:  
+
+$$auth\_suf = \left\{
+
+\begin{aligned}
+
+1 if sufA, sufB are given, and sufA = sufB\\
+
+0, otherwise\\
+
+\end{aligned}
+
+\right$$
+
+4. similarity between the orders of author
+
+$$auth\_ord = \left\{
+
+\begin{aligned}
+
+2 if both authors are the 1st author \\
+
+1 if both authors are the last author \\
+
+2 if only one of midA, midB are given\\
+
+0, otherwise \\
+
+\end{aligned}
+
+\right$$
+
+
+5. IDF weight of the author last name. IDF is the inverse of the fraction of names in the corpus.
+
+auth\_lname\_idf = log(IDF(lnameA))
+
+IDF(lnameA) = IDF(lnameB) = L/DFlnameA
+
+
+**Affiliation Similarity** 类别 
+
 
 
 15. Accuracy of simple, initials-based methods for author name disambiguation
