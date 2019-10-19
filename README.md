@@ -65,6 +65,7 @@ SIGMOD RECORD   卷: 41   期: 2   页: 15-26   出版年: JUN 2012
 5. Two supervised learning approaches for name disambiguation in author citations
 作者: Han, H; Giles, L; Zha, H; 等.
 会议: 4th Joint Conference on Digital Libraries 会议地点: Tucson, AZ 会议日期: JUN 07-11, 2004
+**宁杰**
 
 6. Author Name Disambiguation in MEDLINE
 作者: Torvik, Vetle I.; Smalheiser, Neil R.
@@ -86,6 +87,7 @@ JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY
 作者: Kang, In-Su; Na, Seung-Hoon; Lee, Seungwoo; 等.
 INFORMATION PROCESSING & MANAGEMENT   卷: 45   期: 1   页: 84-97   出版年: JAN 2009
 **宁杰**
+方法与12一致，可参考的意义不大。
 
 10. Analysis of named entity recognition and linking for tweets
 作者: Derczynski, Leon; Maynard, Diana; Rizzo, Giuseppe; 等.
@@ -99,6 +101,7 @@ INFORMATION PROCESSING & MANAGEMENT   卷: 51   期: 2   特刊: SI   页: 32-49
 作者: Strotmann, Andreas; Zhao, Dangzhi
 JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 63   期: 9   页: 1820-1833   出版年: SEP 2012
 **史冬波**
+这篇文章主要的贡献在于使用naive的方法和coauthor based disambiguation的方法来比较对科学家排名的影响；使用的消歧义方法是9中的基于网络搜索的方法。我们用不上。但是这个消岐对实证分析的影响的研究思路是可以直接借鉴的，沿着长江学者的一个后续分析。
 
 13. Efficient name disambiguation for large-scale databases
 作者: Huang, Jian; Ertekin, Seyda; Giles, C. Lee
@@ -109,6 +112,43 @@ JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 63
 作者: Treeratpituk, Pucktada; Giles, C. Lee
 会议: 9th Annual International ACM/IEEE Joint Conference on Digital Libraries 会议地点: Austin, TX 会议日期: JUN 15-19, 2009
 **史冬波**
+变量定义：
+lnamei = the author’s last name in paperi
+fnamei = the author’s first name in paperi
+initi = the author’s first initial in paperi
+midi = the author’s middle name in paperi, if given
+sufi = the author’s suffix in paperi, if given, e.g. “Jr”, “Sr”
+coauthi = set of coauthors’ last name in paperi
+affi = affiliation of the paperi’s 1st author
+titlei = paperi’s title
+jouri = paperi’s journal name
+langi = paperi’s journal language e.g. English, Chinese
+yeari = paperi’s year of publication
+meshi = set of mesh terms in the paperi
+feature
+
+**author 类** 使用上了论文本身的作者信息
+1. firstname similarity
+
+$$auth\_fst = \left\{
+\begin{aligned}
+0 if fnameA \neq fnameB and both are fullname \\
+1 if initA \neq initB and are not both fullname\\
+2 if initA = initB and are not both fullname\\
+3 if fnameA = fnameB and both are fullname\\
+\end{aligned}
+\right$$
+
+2. middle name similarity
+$$auth\_mid = \left\{
+\begin{aligned}
+0 if midA, midB are given, and midA \neq midB \\
+1 if both midA, midB are not given \\
+2 if only one of midA, midB are given\\
+3 if midA, midB are given, and midA = midB\\
+\end{aligned}
+\right$$
+
 
 15. Accuracy of simple, initials-based methods for author name disambiguation
 作者: Milojevic, Stasa
