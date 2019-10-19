@@ -262,6 +262,49 @@ $$mesh\_shared\_idf = sigma log(IDF(t))$$
 
 **journal 类**
 
+16. IDF value of the shared journal, if both are published in the same journal.
+
+$$jour\_shared\_idf = \left\{
+
+\begin{aligned}
+
+logIDF(journalA) if journalA = journalB\\
+
+0, otherwise \\
+
+\end{aligned}
+
+\right$$
+
+17.18用不上
+
+**year类**
+19. 根据wos和thomson的分类做一个变化型
+
+$$jour_year = \left\{
+
+\begin{aligned}
+
+0,if both are before 2008 \\
+
+1,if one is before 2008 and one is after 2008 \\
+
+2,if both are after 2008 \\
+
+\end{aligned}
+
+\right$$
+
+20. year\_diff 
+
+$$year\_diff = |yearA - yearB|$$
+
+**title类**
+
+21. the jaccard similarity between titleA and titleB
+
+$$title\_shared = \frac{|titleA \cap titleB}{|titleA|+|titleB|}$$
+
 
 
 
