@@ -312,7 +312,9 @@ $$title\_shared = \frac{|titleA \cap titleB}{|titleA|+|titleB|}$$
 作者: Milojevic, Stasa
 JOURNAL OF INFORMETRICS   卷: 7   期: 4   页: 767-773   出版年: 2013
 
-16. Citation-based bootstrapping for large-scale author disambiguation
+```diff
+- 16. Citation-based bootstrapping for large-scale author disambiguation
+```
 作者: Levin, Michael; Krawczyk, Stefan; Bethard, Steven; 等.
 JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 63   期: 5   页: 1030-1047   出版年: MAY 2012
 
