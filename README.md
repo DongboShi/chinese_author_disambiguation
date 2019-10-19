@@ -350,5 +350,8 @@ INFORMATION PROCESSING & MANAGEMENT   卷: 47   期: 3   页: 452-465   出版�
 作者: Qian, Yanan; Zheng, Qinghua; Sakai, Tetsuya; 等.
 INFORMATION RETRIEVAL   卷: 18   期: 5   页: 379-412   出版年: OCT 2015
 
+23. McRae-Spencer D M, Shadbolt N R. Also by the same author: AKTiveAuthor, a citation graph approach to name disambiguation[C]//Proceedings of the 6th ACM/IEEE-CS joint conference on Digital libraries. ACM, 2006: 53-54.
+
+**使用了一个citation graph 联通属性**
 
 
