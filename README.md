@@ -114,17 +114,29 @@ JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 63
 **史冬波**
 变量定义：
 lnamei = the author’s last name in paperi
+
 fnamei = the author’s first name in paperi
+
 initi = the author’s first initial in paperi
+
 midi = the author’s middle name in paperi, if given
+
 sufi = the author’s suffix in paperi, if given, e.g. “Jr”, “Sr”
+
 coauthi = set of coauthors’ last name in paperi
+
 affi = affiliation of the paperi’s 1st author
+
 titlei = paperi’s title
+
 jouri = paperi’s journal name
+
 langi = paperi’s journal language e.g. English, Chinese
+
 yeari = paperi’s year of publication
+
 meshi = set of mesh terms in the paperi
+
 feature
 
 **author 类** 使用上了论文本身的作者信息
