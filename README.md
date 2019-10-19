@@ -133,9 +133,13 @@ feature
 $$auth\_fst = \left\{
 \begin{aligned}
 0 if fnameA \neq fnameB and both are fullname \\
+
 1 if initA \neq initB and are not both fullname\\
+
 2 if initA = initB and are not both fullname\\
+
 3 if fnameA = fnameB and both are fullname\\
+
 \end{aligned}
 \right$$
 
@@ -143,9 +147,13 @@ $$auth\_fst = \left\{
 $$auth\_mid = \left\{
 \begin{aligned}
 0 if midA, midB are given, and midA \neq midB \\
+
 1 if both midA, midB are not given \\
+
 2 if only one of midA, midB are given\\
+
 3 if midA, midB are given, and midA = midB\\
+
 \end{aligned}
 \right$$
 
