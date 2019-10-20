@@ -313,7 +313,7 @@ $$title\_shared = \frac{|titleA \cap titleB}{|titleA|+|titleB|}$$
 JOURNAL OF INFORMETRICS   卷: 7   期: 4   页: 767-773   出版年: 2013
 
 ```diff
-- 下面这个文献比较重要，需要精度
+- 下面这个文献比较重要，需要精读
 ```
 16. Citation-based bootstrapping for large-scale author disambiguation
 作者: Levin, Michael; Krawczyk, Stefan; Bethard, Steven; 等.
@@ -363,4 +363,25 @@ Christian Schulz, Amin Mazloumian, Alexander M Petersen, Orion Penner & Dirk Hel
 EPJ Data Science volume 3, Article number: 11 (2014)
 
 本文没有使用机器学习，而是直接使用了调参的方法，优势在于运算速度。
+
+**coauthor类**
+
+1. 共同作者的数量
+$$feature1 =\frac{|Ai \cap Aj|}{min(|Ai|,|Aj|)}$$
+
+**refrence类**
+
+2. $$feature2 = |pi \cap Rj| + |pj \cap Ri|$$ 
+
+pi,pj是否出现在对方的参考文献中
+
+3. $$feature3 = |Ri \cap Rj|$$
+
+**citing 类**
+
+4. $$feature4 = \frac{|Ci \cap Cj|}{min(|Ci|,|Cj|)}
+
+共同被引用次数
+
+
 
