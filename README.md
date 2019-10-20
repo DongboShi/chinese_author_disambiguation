@@ -345,10 +345,40 @@ JCDL 09: PROCEEDINGS OF THE 2009 ACM/IEEE JOINT CONFERENCE ON DIGITAL LIBRARIES 
 JOURNAL OF THE ASSOCIATI
 **涵谦**
 
+ShortAff=the number of words in a shorter affiliation name 
+initialized match= if the single character is the same as the first letter of the token from the other name
+Feature
+1.**full name** used to select comparison pairs
+pass the pair to a similarity calculation if
+(1)all of the unmatched tokens are initialized matches
+(2)all tokens in a shorter name find a match in full string format or an ‘initialized match’ with tokens in a longer name
+(3)different only with/without a space
+(4)different with a partial name or a nickname
+(5)different with one alphabetical character
+(6)different with permutated name tokens
+2.**coauthors**
+$$coauthor_names = \left{
+\begin{aligned}
+1 if share one or more coauthor names in a full given name format\
+0.3 if either or both of their coauthor names come with initialized given names and match in their initialized format\
+\end{aligned}
+\right$$
+3.**Affiliation Similarity**
+   $$\frac{Shareditems}{ShortAff}$$
+   Adds 0.5 if affiliation names share a zip-code
+4.**Email similarity**
+$$email_similarity = \left{
+\begin{aligned}
+1 if match in a full string except domain address part\
+0 if not match\
+\end{aligned}
+\right$$
+
 20. **Counting First, Last, or All Authors in Citation Analysis: A Comprehensive Comparison in the Highly Collaborative Stem Cell Research Field**
 作者: Zhao, Dangzhi; Strotmann, Andreas
 JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 62   期: 4   页: 654-676   出版年: APR 2011
 **涵谦**
+这篇文章是针对高度合作的干细胞研究领域，研究使用first-author counting，last-author counting，all-author counting这三种不同的方法会使得citation analysis（citation ranking，field mapping）产生什么不一样的结果。使用的消歧方法是基于Strot-mann et al. (2009)的一种自动消歧方法。
 
 21. **A boosted-trees method for name disambiguation**
 作者: Wang, Jian; Berzins, Kaspars; Hicks, Diana; 等.
