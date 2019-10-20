@@ -346,6 +346,7 @@ JOURNAL OF THE ASSOCIATI
 **涵谦**
 
 ShortAff=the number of words in a shorter affiliation name 
+
 initialized match= if the single character is the same as the first letter of the token from the other name
 
 Feature
