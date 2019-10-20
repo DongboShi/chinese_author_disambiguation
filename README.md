@@ -1,6 +1,16 @@
 # chinese_author_disambiguation
 the project is to disambiguate the Chinese authors of web of science articles 
 
+
+
+## data pipeline
+1. 对于每一个名字的备选集，输出确定顺序的论文ut_pairs.由于我们使用的是部分消岐的grand truth，所以这部分要筛选出确定的positive pairs 和negative pairs，后续的feature构造结束后，只能选择相应的pair进入训练集；
+2. 针对每一个制造相关的feature，其中部分idf依赖于wos全库的数据信息，这部分我来选泽出来，存入特定的数据文件
+3. 在person层面，对一部分人流出来20%作为test集合；然后剩下的人作为training data；特别是不是每一对pair都是traning data pairs，这一步要完成筛选；
+4. 训练模型
+5. 调参数
+
+
 ## 备选的feature
 
 每个feature 注明参考文献来源
