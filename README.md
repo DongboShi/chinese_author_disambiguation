@@ -351,32 +351,53 @@ initialized match= if the single character is the same as the first letter of th
 Feature
 
 1.**full name** used to select comparison pairs
+
 pass the pair to a similarity calculation if
+
 (1)all of the unmatched tokens are initialized matches
+
 (2)all tokens in a shorter name find a match in full string format or an ‘initialized match’ with tokens in a longer name
+
 (3)different only with/without a space
+
 (4)different with a partial name or a nickname
+
 (5)different with one alphabetical character
+
 (6)different with permutated name tokens
 
 2.**coauthors**
+
 $$coauthor_names = \left{
+
 \begin{aligned}
+
 1 if share one or more coauthor names in a full given name format\
+
 0.3 if either or both of their coauthor names come with initialized given names and match in their initialized format\
+
 \end{aligned}
+
 \right$$
 
 3.**Affiliation Similarity**
+   
    $$\frac{Shareditems}{ShortAff}$$
+   
    Adds 0.5 if affiliation names share a zip-code
    
 4.**Email similarity**
+
 $$email_similarity = \left{
+
 \begin{aligned}
+
 1 if match in a full string except domain address part\
+
 0 if not match\
+
 \end{aligned}
+
 \right$$
 
 20. **Counting First, Last, or All Authors in Citation Analysis: A Comprehensive Comparison in the Highly Collaborative Stem Cell Research Field**
