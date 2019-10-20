@@ -347,7 +347,9 @@ JOURNAL OF THE ASSOCIATI
 
 ShortAff=the number of words in a shorter affiliation name 
 initialized match= if the single character is the same as the first letter of the token from the other name
+
 Feature
+
 1.**full name** used to select comparison pairs
 pass the pair to a similarity calculation if
 (1)all of the unmatched tokens are initialized matches
@@ -356,6 +358,7 @@ pass the pair to a similarity calculation if
 (4)different with a partial name or a nickname
 (5)different with one alphabetical character
 (6)different with permutated name tokens
+
 2.**coauthors**
 $$coauthor_names = \left{
 \begin{aligned}
@@ -363,9 +366,11 @@ $$coauthor_names = \left{
 0.3 if either or both of their coauthor names come with initialized given names and match in their initialized format\
 \end{aligned}
 \right$$
+
 3.**Affiliation Similarity**
    $$\frac{Shareditems}{ShortAff}$$
    Adds 0.5 if affiliation names share a zip-code
+   
 4.**Email similarity**
 $$email_similarity = \left{
 \begin{aligned}
