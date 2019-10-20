@@ -91,7 +91,8 @@ JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY
 8. Name disambiguation spectral in author citations using a K-way clustering method
 作者: Han, H; Zha, HY; Giles, CL
 会议: 5th ACM/IEEE Joint Conference on Digital Libraries 会议地点: Denver, CO 会议日期: JUN 07-11, 2005
-**宁杰**
+**宁杰**\\
+coauthor names, paper titles, and publication venue titles. 
 
 9. On co-authorship for author disambiguation
 作者: Kang, In-Su; Na, Seung-Hoon; Lee, Seungwoo; 等.
