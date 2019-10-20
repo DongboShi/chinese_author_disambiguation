@@ -358,4 +358,9 @@ INFORMATION RETRIEVAL   卷: 18   期: 5   页: 379-412   出版年: OCT 2015
 
 **使用了一个citation graph 联通属性**
 
+24. Exploiting citation networks for large-scale author name disambiguation
+Christian Schulz, Amin Mazloumian, Alexander M Petersen, Orion Penner & Dirk Helbing 
+EPJ Data Science volume 3, Article number: 11 (2014)
+
+本文没有使用机器学习，而是直接使用了调参的方法，优势在于运算速度。
 
