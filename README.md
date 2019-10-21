@@ -77,6 +77,22 @@ SIGMOD RECORD   卷: 41   期: 2   页: 15-26   出版年: JUN 2012
 会议: 4th Joint Conference on Digital Libraries 会议地点: Tucson, AZ 会议日期: JUN 07-11, 2004
 **宁杰**
 
+1.coauthor names
+
+the individual coauthor
+
+2.paper titles
+
+the individual keyword in the paper title. By “keyword”, we mean the remaining words after filtering out the stop words (such as, “a”, “the” “of”, etc.).
+
+3.journal titles
+
+the individual keyword in the journal title. By “keyword”, we mean the remaining words after filtering out the stop words (such as, “a”, “the” “of”, etc.).
+
+4.affiliation
+
+5.research area
+
 6. Author Name Disambiguation in MEDLINE
 作者: Torvik, Vetle I.; Smalheiser, Neil R.
 ACM TRANSACTIONS ON KNOWLEDGE DISCOVERY FROM DATA
@@ -91,8 +107,27 @@ JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY
 8. Name disambiguation spectral in author citations using a K-way clustering method
 作者: Han, H; Zha, HY; Giles, CL
 会议: 5th ACM/IEEE Joint Conference on Digital Libraries 会议地点: Denver, CO 会议日期: JUN 07-11, 2005
-**宁杰**\\
-coauthor names, paper titles, and publication venue titles. 
+**宁杰**
+
+1.coauthor names
+
+one co-author name 
+
+2.paper titles
+
+one pre-processed word in the title of a paper
+
+3.publication venue titles
+
+one pre-processed word in the title of a publication venue
+
+4.author's affiliation
+
+5.author's address
+
+With m features in the name dataset, each citation can be represented as a m-dimensional vector, i.e.,$$ M =(α\_1, ·· · ,α\_m)$$.If the ith feature in the dataset appears in citation M, $$α\_i$$ is the feature i’s weight. Otherwise, $$α\_i$$ =0. 
+
+two types of feature weight assignment:the usual “TFIDF”; and the normalized “TF” (“NTF”), where $$ntf(i, d)= freq(i, d)/max(freq(i, d))$$ freq(i, d) refers to the term frequency of feature i in a citation d. max(freq(i, d)) refers to the maximal term frequency of feature i in any citation d. 
 
 9. On co-authorship for author disambiguation
 作者: Kang, In-Su; Na, Seung-Hoon; Lee, Seungwoo; 等.
