@@ -79,7 +79,7 @@ SIGMOD RECORD   卷: 41   期: 2   页: 15-26   出版年: JUN 2012
 
 1.coauthor names
 
-the individual coauthor
+the individual coauthor. Author names in citations are represented by the first name initial and last name.
 
 2.paper titles
 
@@ -89,9 +89,25 @@ the individual keyword in the paper title. By “keyword”, we mean the remaini
 
 the individual keyword in the journal title. By “keyword”, we mean the remaining words after filtering out the stop words (such as, “a”, “the” “of”, etc.).
 
-4.affiliation
+4.Hybrid I
+Hybrid I=\left\{\begin{aligned}computes the equal joint probability of different attributes & naive Bayes \\
+combines different attributes in the same feature space &  SVM \end{aligned}\right.
 
-5.research area
+5.Hybrid II
+The “Hybrid II” scheme is specific to the naive Bayes model and uses the coauthor attribute alone when a coauthor relationship exists between a coauthor in the test citation and a candidate name entry in the citation database; otherwise, “Hybrid II” uses the equal joint probability of all the three attributes.
+
+**NAIVE BAYES**
+
+$$max\_iP(X\_i|C)$$:find a name entry Xi in the citation database with the maximal posterior probability of producing the citation C.
+
+$$max\_iP(X\_i|C)= max\_i[\sum_j \sum_k log(P(A\_jk))+log(P(X\_i))] 
+where j ∈ [1, 3] and k ∈ [0,K(j)],where P(X\_i) denotes the prior probability ofXi authoring papers
+
+where A\_j denotes the different type of attribute; that is, A\_1 - the coauthor names; A\_2 - the paper title; A\_3 - the journal title. Each attribute is decomposed into independent elements represented by A\_jk (k ∈ [0..K(j)]). K(j) is the total number of elements in attribute A\_j. For example, A\_1 =(A\_11,A\_12, ..., A\_1k, ..., A\_1K(1)), where A\_1k indicates the kth coauthor in C.
+
+**SVM**
+
+The SVM approach considers each author as a class, and classifies a new citation to the closest author class. With the SVM approach, we represent each citation in a vector space; each coauthor name and keyword in paper/journal title is a feature ofthe vector.
 
 6. Author Name Disambiguation in MEDLINE
 作者: Torvik, Vetle I.; Smalheiser, Neil R.
@@ -121,13 +137,11 @@ one pre-processed word in the title of a paper
 
 one pre-processed word in the title of a publication venue
 
-4.author's affiliation
-
-5.author's address
-
 With m features in the name dataset, each citation can be represented as a m-dimensional vector, i.e.,$$ M =(α\_1, ·· · ,α\_m)$$.If the ith feature in the dataset appears in citation M, $$α\_i$$ is the feature i’s weight. Otherwise, $$α\_i$$ =0. 
 
 two types of feature weight assignment:the usual “TFIDF”; and the normalized “TF” (“NTF”), where $$ntf(i, d)= freq(i, d)/max(freq(i, d))$$ freq(i, d) refers to the term frequency of feature i in a citation d. max(freq(i, d)) refers to the maximal term frequency of feature i in any citation d. 
+
+Construct citation vectors for each name dataset, and the Gram matrix of the citation vectors represents the pairwise cosine similarities between citations. 
 
 9. On co-authorship for author disambiguation
 作者: Kang, In-Su; Na, Seung-Hoon; Lee, Seungwoo; 等.
