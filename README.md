@@ -80,14 +80,17 @@ SIGMOD RECORD   卷: 41   期: 2   页: 15-26   出版年: JUN 2012
 1.coauthor names
 
 the individual coauthor. Author names in citations are represented by the first name initial and last name.
+construct a vector A\_1 =(A\_11,A\_12, ..., A\_1k, ..., A\_1K(1)), A\_1 represents the coauthor feature, A\_11 represents one coauthor of the citation.
 
 2.paper titles
 
 the individual keyword in the paper title. By “keyword”, we mean the remaining words after filtering out the stop words (such as, “a”, “the” “of”, etc.).
+construct a vector A\_2 =(A\_21,A\_22, ..., A\_2k, ..., A\_2K(1)), A\_2 represents the paper title feature, A\_21 represents one keyword of the citation.
 
 3.journal titles
 
 the individual keyword in the journal title. By “keyword”, we mean the remaining words after filtering out the stop words (such as, “a”, “the” “of”, etc.).
+construct a vector A\_3 =(A\_31,A\_32, ..., A\_3k, ..., A\_3K(1)), A\_3 represents the journal titles feature, A\_31 represents one keyword of the citation.
 
 4.Hybrid I
 Hybrid I=\left\{\begin{aligned}computes the equal joint probability of different attributes & naive Bayes \\
@@ -100,10 +103,35 @@ The “Hybrid II” scheme is specific to the naive Bayes model and uses the coa
 
 $$max\_iP(X\_i|C)$$:find a name entry Xi in the citation database with the maximal posterior probability of producing the citation C.
 
-$$max\_iP(X\_i|C)= max\_i[\sum_j \sum_k log(P(A\_jk))+log(P(X\_i))] 
-where j ∈ [1, 3] and k ∈ [0,K(j)],where P(X\_i) denotes the prior probability ofXi authoring papers
+$$max\_iP(X\_i|C)= max\_i[\sum_j \sum_k log(P(A\_jk))+log(P(X\_i))] $$
+where j ∈ [1, 3] and k ∈ [0,K(j)],where P(X\_i) denotes the prior probability of X\_i authoring papers
 
 where A\_j denotes the different type of attribute; that is, A\_1 - the coauthor names; A\_2 - the paper title; A\_3 - the journal title. Each attribute is decomposed into independent elements represented by A\_jk (k ∈ [0..K(j)]). K(j) is the total number of elements in attribute A\_j. For example, A\_1 =(A\_11,A\_12, ..., A\_1k, ..., A\_1K(1)), where A\_1k indicates the kth coauthor in C.
+
+the decomposition and estimation of the coauthor conditional probability P(A\_1|X\_i) from the training citations, where A\_1 = (A\_11,A\_12, ..., A\_1k, ..., A\_1K(1)). The probability estimation is the maximum likelihood estimation for parameters of multinomial distributions.
+
+**P(A\_1|X\_i)= P(N|X\_i) if K(1) =0**
+
+P(N|X\_i) - the probability of X\_i writing a future paper alone conditioned on the event of X\_i, estimated as the proportion of the papers that X\_i authors alone among all the papers of X\_i.(N stands for “No coauthor”, and “Co” below stands for “Has coauthor”).
+
+**P(A\_1|X\_i)= P(A\_11|X\_i)...P(A\_1k|X\_i)...P(A\_1K|X\_i) if K(1) > 0**
+
+where P(A\_1k|X\_i)= P(A\_1k,N|X\_i)+ P(A\_1k,Co|X\_i) 
+                   = 0+P(A\_1k,Co|X\_i) 
+		   = P(A\_1k,Seen,Co|X\_i)+ P(A\_1k,Unseen,Co|X\_i) 
+		   = P(A\_1k|Seen, Co,X\_i)∗P(Seen|Co,X\_i)∗P(Co|X\_i)+ P(A\_1k|Unseen, Co, X\_i)∗P(Unseen|Co, X\_i)∗P(Co|X\_i)
+
+P(Co|X\_i) - the probability of X\_i writing a future paper with coauthors conditioned on the event of X\_i.P(Co|X\_i)=1− P(N|X\_i)
+
+P(Seen|Co,Xi) - We regard the coauthors coauthoring a paper with X\_i at least twice in the training citations as the “seen coauthors”; the other coauthors coauthoring a paper with X\_i only once in the training citations is considered as the “unseen coauthors”. if Xi has n coauthors in a training citation C, we count that X\_i coauthors n times in citation C.
+
+P(Unseen|Co,X\_i) - P(Unseen|Co, X\_i) = 1 −P(Seen|Co,X\_i)
+
+P(A\_1k|Seen, Co,X\_i) - the probability of X\_i writing a future paper with a particular coauthor A\_1k conditioned on the event that X\_i writes a paper with previously seen coauthors. We estimate it as the proportion of the number of times that X\_i coauthors with A\_1k among the total number of times X\_i coauthors with any coauthor.
+
+P(A\_1k|Unseen, Co, X\_i) - the probability of X\_i writing a future paper with a particular coauthor A\_1k conditioned on the event that X\_i writes a paper with unseen coauthors. Considering all the names in the training citations as the population and assuming that X\_i has equal probability to coauthor with an unseen author, we estimate P(A\_1k|Unseen, Co,X\_i) as 1 divided by the total number of author (or coauthor) names in the training citations minus the number of coauthors of X\_i.
+
+Similarly, we can estimate the conditional probability P(A2|Xi) that an author writes a paper title, and the conditional probability P(A3|Xi) that he publishes in a particular journal. Taking each title word of the paper and journal as an independent element, we estimate the probabilities that Xi uses a certain word for a future paper title, and publishes a future paper in a journal with a particular word in the journal title.
 
 **SVM**
 
@@ -127,19 +155,21 @@ JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY
 
 1.coauthor names
 
-one co-author name 
+each co-author name 
 
 2.paper titles
 
-one pre-processed word in the title of a paper
+each pre-processed word in the title of a paper
 
 3.publication venue titles
 
-one pre-processed word in the title of a publication venue
+each pre-processed word in the title of a publication venue
 
-With m features in the name dataset, each citation can be represented as a m-dimensional vector, i.e.,$$ M =(α\_1, ·· · ,α\_m)$$.If the ith feature in the dataset appears in citation M, $$α\_i$$ is the feature i’s weight. Otherwise, $$α\_i$$ =0. 
+for one citation M, construct a vector, M =(α\_1, ·· · ,α\_m), the ith feature in the dataset appears in citation M, $$α\_i$$ is the feature i’s weight. Otherwise, $$α\_i$$ =0.
 
-two types of feature weight assignment:the usual “TFIDF”; and the normalized “TF” (“NTF”), where $$ntf(i, d)= freq(i, d)/max(freq(i, d))$$ freq(i, d) refers to the term frequency of feature i in a citation d. max(freq(i, d)) refers to the maximal term frequency of feature i in any citation d. 
+two types of feature weight assignment:
+the usual “TFIDF”;
+the normalized “TF” (“NTF”), where $$ntf(i, M)= freq(i, M)/max(freq(i, M))$$ , freq(i,M) refers to the term frequency of feature i in a citation M. max(freq(i, M)) refers to the maximal term frequency of feature i in any citation M. 
 
 Construct citation vectors for each name dataset, and the Gram matrix of the citation vectors represents the pairwise cosine similarities between citations. 
 
