@@ -593,6 +593,8 @@ JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 63
 JOURNAL OF THE ASSOCIATION FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 65   期: 4   页: 765-781   出版年: APR 2014
 **李萌**
 
+**Title**
+
 18. Using Web Information for Author Name Disambiguation
 作者: Pereira, Denilson Alves; Ribeiro-Neto, Berthier; Ziviani, Nivio; 等.
 会议: 9th Annual International ACM/IEEE Joint Conference on Digital Libraries 会议地点: Austin, TX 会议日期: JUN 15-19, 2009
