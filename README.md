@@ -378,10 +378,13 @@ JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 63
 **李萌**
 
 没有详述feature，着重在讲DBSCAN聚类算法。
+
+
 14. Disambiguating Authors in Academic Publications using Random Forests
 作者: Treeratpituk, Pucktada; Giles, C. Lee
 会议: 9th Annual International ACM/IEEE Joint Conference on Digital Libraries 会议地点: Austin, TX 会议日期: JUN 15-19, 2009
 **史冬波**
+
 变量定义：
 lnamei = the author’s last name in paperi
 
