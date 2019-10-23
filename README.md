@@ -261,6 +261,72 @@ $$r(x)=r1(x1)rx(x2)r3(x3)r4(x4)...r10(x10)$$
 JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY
 **子江**
 
+**Fields**
+
+pmid = unique (PubMed) article identification number
+
+order = position of author name on article
+
+last = last name of author
+
+init1 = first initial of author name
+
+init2 = middle initial of author name
+
+suff = suffix of author name
+
+title = set of title words after preprocessing and removing title-stopwords
+
+affl = set of affiliation words after preprocessing and removing affiliation-stopwords
+
+jrnl = journal name
+
+lang = language of article
+
+mesh = set of MeSH words after preprocessing and removing mesh-stopwords
+
+title-stopwords = 
+Small: PubMed’s set of stopwords as of January 2002, which consists 365 commonly used English words, like “the” and “and.”  
+Medium: The small stoplist together with the 1,029 words that appear in over 0.1% of the titles. About 400 of these frequent words were not included in this list because we judged that they may be important for establishing connections between two disparate disciplines.  
+Large: The small stoplist together with a list of the 8,207 words that are thought not to be important in establishing connections between two disparate disciplines.These words have been accumulated over the years as a part of the Arrowsmith Project (Swanson &
+Smalheiser, 1997). All words on the medium stoplist were also on the large stoplist.
+
+affiliation-stopwords = small title-stopwords ∪ {university, medicine, medical, usa, hospital, school, institute, center,research, science, college, health, new, laboratory, division,national},
+
+mesh-stopwords = {human, male, female, animal, adult,support non-u.s. gov’t, middle age, aged, english abstract,support u.s. gov’t p.h.s., case report, rats, comparative study, adolescence, child, mice, time factors, child preschool, pregnancy, united states, infant, molecular sequence data, kinetics, support u.s. gov’t non-p.h.s., infant newborn}.
+
+**Similarity Profile**
+
+Suppose two distinct records obtained from the AUTHOR_ARTICLES table are given by:  
+RA = (pmidA, orderA, lastA, init1A, init2A, suffA, coauthA, titleA, afflA, jrnlA, langA, meshA),  
+RB = (pmidB, orderB, lastB, init1B, init2B, suffB, coauthB, titleB, afflB, jrnlB, langB, meshB),  
+The similarity profile x = (x1, x2, x3, x4, x5, x6, x7, x8, x9) is created by comparing the two records element wise as follows:
+
+x1 = 3 if init2A = init2B and both are given (e.g., (A, A)),  
+     2 if init2A = init2B and both are not given (i.e., (∅, ∅)),  
+     1 if init2A = init2B and one is not given (e.g., (A, ∅)),  
+     and 0 if init2A = init2B and both are given (e.g., (A, B)).
+     
+x2 = 1 if suffA = suffB and both are given (e.g., (Jr, Jr)), and 0 otherwise,
+
+x3 = |titleA ∩ titleB|,
+
+x4 = 1 if jrnlA = jrnlB, and 0 otherwise,
+
+x5 = |coauthA ∩ coauthB|,
+
+x6 = |meshA ∩ meshB|,
+
+x7 = 3 if langA = langB and non-English (e.g., (jpn, jpn)),  
+     2 if langA = langB and English (i.e., (eng, eng)),  
+     1 if langA ≠ langB and one is English (e.g., (eng, jpn)),  
+     and 0 if langA ≠ langB and both are non-English (e.g.,(jpn, fre)).
+
+x8 = |afflA ∩ afflB|,
+
+x9 = 1 if afflA = ∅ or afflB = ∅, and 0 otherwise.
+
+
 8. Name disambiguation spectral in author citations using a K-way clustering method
 作者: Han, H; Zha, HY; Giles, CL
 会议: 5th ACM/IEEE Joint Conference on Digital Libraries 会议地点: Denver, CO 会议日期: JUN 07-11, 2005
