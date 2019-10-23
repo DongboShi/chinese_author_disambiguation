@@ -595,19 +595,26 @@ JOURNAL OF THE ASSOCIATION FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 65   �
 
 **Title**
 IDF算法
+
 **Affiliation**
+
 **Journal**
+
 **Abstract**
 给的比重比较低，因为大多是专有名词，体现不太出个体差异
 the Abstract field normally consists of significantly more terms, many of which are not strongly associated with author identity, and hence are not as informative.
+
 **Substance**
 很重要
 For the Grant and Substance fields, a small amount of similarity is actually evidence of a different grant or a different substance, and hence evidence against having the same author.
+
 **Grant**
 很重要
 For the Grant and Substance fields, a small amount of similarity is actually evidence of a different grant or a different substance, and hence evidence against having the same author.
+
 **MeSH**
 Medical Subject Headings
+
 **Author**
 name要满足一下三个条件，简单来说就是姓一定要保证一致，名（第2点）和中间字符（第3点）符合其中之一即可
 1. NAMEi.last_name == NAMEj 
@@ -615,7 +622,7 @@ name要满足一下三个条件，简单来说就是姓一定要保证一致，�
 middle_name or NAMEi.first_name.variant .middle_name or NAMEi.middle_name.first_character == NAMEj .middle_name == NULL
 coauthor的相似度同样借用了IDF的做法
 **Date**
-
+year = diff(year1,year2)
 
 18. Using Web Information for Author Name Disambiguation
 作者: Pereira, Denilson Alves; Ribeiro-Neto, Berthier; Ziviani, Nivio; 等.
