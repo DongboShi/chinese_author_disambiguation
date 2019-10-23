@@ -621,8 +621,9 @@ Medical Subject Headings
 
 **Author**
 name要满足一下三个条件，简单来说就是姓一定要保证一致，名（第2点）和中间字符（第3点）符合其中之一即可
-1. NAMEi.last_name == NAMEj 
-2. NAMEi.first_name == NAMEj.initial letter) or NAMEi.last_name .first_name or NAMEi.first_name.first_character == NAMEj _name (the first name information for NAMEj.first_name == NULL or NAMEi.first_name == NAMEj 3. NAMEi.middle_name == NAMEj
+
+1.NAMEi.last_name == NAMEj 
+2.NAMEi.first_name == NAMEj.initial letter) or NAMEi.last_name .first_name or NAMEi.first_name.first_character == NAMEj _name (the first name information for NAMEj.first_name == NULL or NAMEi.first_name == NAMEj 3. NAMEi.middle_name == NAMEj
 middle_name or NAMEi.first_name.variant .middle_name or NAMEi.middle_name.first_character == NAMEj .middle_name == NULL
 coauthor的相似度同样借用了IDF的做法
 **Date**
@@ -633,6 +634,7 @@ year = diff(year1,year2)
 会议: 9th Annual International ACM/IEEE Joint Conference on Digital Libraries 会议地点: Austin, TX 会议日期: JUN 15-19, 2009
 会议赞助商: ACM SIGWEB; ACM Speial Intrest Grp Informat Retrieval; IEEE Comp Soc; IEEE
 JCDL 09: PROCEEDINGS OF THE 2009 ACM/IEEE JOINT CONFERENCE ON DIGITAL LIBRARIES   丛书: ACM-IEEE Joint Conference on Digital Libraries JCDL   页: 49-58   出版年: 2009
+
 
 19. Distortive Effects of Initial-Based Name Disambiguation on Measurements of Large-Scale Coauthorship Networks
 作者: Kim, Jinseok; Diesner, Jana
