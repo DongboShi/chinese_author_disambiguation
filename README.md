@@ -87,7 +87,7 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 
 
 ### 其他类
-doc2vec 是不是
+doc2vec
 
 ## 模型选择
 
