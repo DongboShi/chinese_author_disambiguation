@@ -3,7 +3,7 @@ the project is to disambiguate the Chinese authors of web of science articles
 
 
 
-## data pipeline
+## 说明
 1. 对于每一个名字的备选集，输出确定顺序的论文ut_pairs.由于我们使用的是部分消岐的grand truth，所以这部分要筛选出确定的positive pairs 和negative pairs，后续的feature构造结束后，只能选择相应的pair进入训练集；
 
 
@@ -109,6 +109,25 @@ randomforest
 
 ## data pipeline
 ### 规定pair顺序
+关于每个文件的pair的说明：每一个h5文件对应了一个待消岐的科学家，按照子江目前的命名方式，是一个自然数，所以我生成的h5文件为1_pair.h5,每一个文件包含了一个dataframe，对应的是该科学家需要生成的pair。
+
+- 安装依赖
+```
+source("http://bioconductor.org/biocLite.R")
+biocLite("rhdf5")
+library(rhdf5)
+```
+- 读入
+```
+h5read("1_pair.h5",name="pair")
+```
+- 使用方法
+输出的feature要与我定义的pair中的顺序完全对应，h5用下列名字写出
+```
+h5write(author1,file="author1.h5",name="feature")
+```
+
+
 ### 制作feature
 ### train model
 ### predict cluster
