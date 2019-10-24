@@ -31,10 +31,14 @@ idf 给定作者后，在备选集里面用内部分布；另一种做法是全�
 |IDFlname-weight of the author last name|Pucktada 2009|直接计算相关lastauthorname的备选论文数量的导数|宁杰、李萌|
 
 ### coauthor 类
+coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字中的特殊符号，包括"-，\_\`'"。然后再仅保留family name的第一个首字母；因此每一个coauthor name可以有两个形式，一个是given name 首字母 + family name，一个是original full given name + family name。后续的feature相应的也会有两套。
+
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
-| coauthor1|Kim 2009|单元格|宁杰、李萌|
-| coauthor2|kim 2009|单元格||宁杰、李萌|
+|coauthor11|Pucktada 2009|# coauthorA ∩ coauthorB |史冬波|
+|coauthor12|Pucktada 2009|# coauthorA ∩ coauthorB|史冬波|
+|coauthor21|Schulz 2014||
+|coauthor22|Schulz||
 
 ### reference 和citation 类
 
