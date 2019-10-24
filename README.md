@@ -37,14 +37,29 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 | -----| ---- | ---- |----|
 |coauthor11|Pucktada 2009|# coauthorA ∩ coauthorB |史冬波|
 |coauthor12|Pucktada 2009|# coauthorA ∩ coauthorB|史冬波|
-|coauthor21|Schulz 2014|# coauthorA ∩ coauthorB / # min(#coauthorA,coauthorB)|史冬波|
-|coauthor22|Schulz|# coauthorA ∩ coauthorB / # min(#coauthorA,coauthorB)|史冬波|
+|coauthor21|Schulz 2014|# coauthorA ∩ coauthorB / min(#coauthorA,#coauthorB)|史冬波|
+|coauthor22|Schulz 2014|# coauthorA ∩ coauthorB / min(#coauthorA,#coauthorB)|史冬波|
+|coauthor31|Pucktada 2009|# coauthorA ∩ coauthorB / (#coauthorA + #coauthorB)|史冬波|
+|coauthor32|Pucktada 2009|# coauthorA ∩ coauthorB / (#coauthorA + #coauthorB)|史冬波|
+|coauthor41|Pucktada 2009|∑ IDF coauthor，使用局部的idf|史冬波|
+|coauthor42|Pucktada 2009|∑ IDF coauthor，使用局部的idf|史冬波|
+|coauthor51|Pucktada 2009|∑ IDF coauthor，全局idf|史冬波|
+|coauthor52|Pucktada 2009|∑ IDF coauthor，全局idf|史冬波|
+|coauthor61|自创|min (step between A and B，5)|史冬波|
+|coauthor62|自创|min (step between A and B，5)|史冬波|
 
 ### reference 和citation 类
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
+|ref1||||
 
 ### journal 类
 
 ### year 类
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
+|year1|Pucktada 2009|year dif|宁杰，李萌|
+|year2|Pucktada 2009|0,if both are before 2008;<br />1,if one is before 2008 and one is after 2008;<br />2,if both are after 2008|宁杰，李萌|
 
 ### affiliation 类
 
