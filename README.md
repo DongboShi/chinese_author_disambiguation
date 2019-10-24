@@ -51,11 +51,11 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 ### reference 和citation 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
-|ref1|Schulz 2014|#pA ∩ RB + # pB ∩ RA||史冬波|
-|ref2|Schulz 2014|# RB ∩ # RA||史冬波|
-|ref3|自创|∑logidf(R)局部idf||史冬波|
-|ref4|Schulz 2014|#citingA ∩ citingB / min(#citingA,#citingB)||史冬波|
-|ref5|Schulz 2014|#citingA ∩ citingB / #citingA+#citingB||史冬波|
+|ref1|Schulz 2014|#pA ∩ RB + # pB ∩ RA|涵谦|
+|ref2|Schulz 2014|# RB ∩ # RA|涵谦|
+|ref3|自创|∑logidf(R)局部idf|涵谦|
+|ref4|Schulz 2014|#citingA ∩ citingB / min(#citingA,#citingB)||史冬波，缺数据|
+|ref5|Schulz 2014|#citingA ∩ citingB / #citingA+#citingB||史冬波，缺数据|
 
 
 ### journal 类
