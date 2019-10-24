@@ -37,8 +37,8 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 | -----| ---- | ---- |----|
 |coauthor11|Pucktada 2009|# coauthorA ∩ coauthorB |史冬波|
 |coauthor12|Pucktada 2009|# coauthorA ∩ coauthorB|史冬波|
-|coauthor21|Schulz 2014||
-|coauthor22|Schulz||
+|coauthor21|Schulz 2014|# coauthorA ∩ coauthorB / # min(#coauthorA,coauthorB)|史冬波|
+|coauthor22|Schulz|# coauthorA ∩ coauthorB / # min(#coauthorA,coauthorB)|史冬波|
 
 ### reference 和citation 类
 
