@@ -23,6 +23,7 @@ idf 给定作者后，在备选集里面用内部分布；另一种做法是全�
 每个feature 注明参考文献来源
 ### author 类
 如何结合torvik 和 kim的做法?
+
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
 | givenname|Pucktada 2009|0 if fnameA ≠ fnameB and both are fullname;<br /> 1 if fnameA ≠ fnameB and are not both fullname;<br />2 if fnameA ＝ fnameB and both are not fullname;<br />3 if fnameA ＝ fnameB and both are fullname|宁杰、李萌|
