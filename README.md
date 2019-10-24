@@ -41,10 +41,10 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |coauthor22|Schulz 2014|# coauthorA ∩ coauthorB / min(#coauthorA,#coauthorB)|史冬波|
 |coauthor31|Pucktada 2009|# coauthorA ∩ coauthorB / (#coauthorA + #coauthorB)<br />可以使用stringdist包直接计算|史冬波|
 |coauthor32|Pucktada 2009|# coauthorA ∩ coauthorB / (#coauthorA + #coauthorB)<br />可以使用stringdist包直接计算|史冬波|
-|coauthor41|Pucktada 2009|∑ IDF coauthor，使用局部的idf|史冬波|
-|coauthor42|Pucktada 2009|∑ IDF coauthor，使用局部的idf|史冬波|
-|coauthor51|Pucktada 2009|∑ IDF coauthor，全局idf|史冬波|
-|coauthor52|Pucktada 2009|∑ IDF coauthor，全局idf|史冬波|
+|coauthor41|Pucktada 2009|∑ logIDF coauthor，使用局部的idf|史冬波|
+|coauthor42|Pucktada 2009|∑ logIDF coauthor，使用局部的idf|史冬波|
+|coauthor51|Pucktada 2009|∑ logIDF coauthor，全局idf|史冬波|
+|coauthor52|Pucktada 2009|∑ logIDF coauthor，全局idf|史冬波|
 |coauthor61|自创|min (step between A and B，5)|史冬波|
 |coauthor62|自创|min (step between A and B，5)|史冬波|
 
@@ -56,7 +56,9 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 ### journal 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
-|so||||
+|so1|Pucktada 2009|1 if in same so;<br />0 if not in same so|宁杰,李萌|
+|so1|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,我提供全局idf|
+
 ### year 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
@@ -72,8 +74,8 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
 |title1|Pucktada 2009|# titleA ∩ titleB / (#titleA + #titleB)<br />可以使用stringdist包直接计算|李萌、宁杰|
-|title2|自创|∑ idf(shared item),使用局部idf|李萌、宁杰|
-|title3|自创|∑ idf(shared item),使用全局idf|李萌、宁杰、史冬波，待定是否加入|
+|title2|自创|∑ logidf(shared item),使用局部idf|李萌、宁杰|
+|title3|自创|∑ logidf(shared item),使用全局idf|李萌、宁杰、史冬波，待定是否加入|
 
 
 ### 其他 类
