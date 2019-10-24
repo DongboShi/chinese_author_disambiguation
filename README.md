@@ -841,6 +841,10 @@ pi,pj是否出现在对方的参考文献中
 共同被引用次数
 
 
+## 用到的工具
+### rlist
+处理list对象的工具
+https://renkun-ken.github.io/rlist/
 
 
 
