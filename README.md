@@ -26,7 +26,8 @@ idf 给定作者后，在备选集里面用内部分布；另一种做法是全�
 
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
-| firstname|Pucktada 2009|0 if fnameA ≠ fnameB and both are fullname;<br />1;2;3|宁杰、李萌|
+| givenname|Pucktada 2009|0 if fnameA ≠ fnameB and both are fullname;<br /> 1 if fnameA ≠ fnameB and are not both fullname;<br />2 if fnameA ＝ fnameB and both are not fullname;<br />3 if fnameA ＝ fnameB and both are fullname|宁杰、李萌|
+| authororder||Pucktada 2009|2 if both authors are the 1st author;<br />1 if both authors are the last author;<br /> 2 one first and the other last;<br /> 0 otherwise|宁杰、李萌|
 
 ### coauthor 类
 | feature | reference | definition | 负责人|
