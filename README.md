@@ -97,6 +97,9 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 ### 其他类
 doc2vec
 
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
+|email|1,存在一个相同的email|||
 ## 模型选择
 
 理论上我们会尝试所有类型的模型
