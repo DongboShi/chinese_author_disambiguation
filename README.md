@@ -21,19 +21,32 @@ idf 给定作者后，在备选集里面用内部分布；另一种做法是全�
 ## 备选的feature
 
 每个feature 注明参考文献来源
+### author 类
+如何结合torvik 和 kim的做法?
+
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
+| firstname|Pucktada 2009|0 if fnameA ≠ fnameB and both are fullname;\\
+			  1;2;3|宁杰、李萌|
 
 ### coauthor 类
-| feature | reference | definition |
-| -----| ---- | ---- |
-| 单元格 | 单元格 | 单元格 |
-| 单元格 | 单元格 | 单元格 |
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
+| coauthor1|Kim 2009|单元格|宁杰、李萌|
+| coauthor2|kim 2009|单元格||宁杰、李萌|
 
 ### reference 和citation 类
+
 ### journal 类
+
 ### year 类
+
 ### affiliation 类
+
 ### keywords 类
+
 ### title 类
+
 ### 其他 类
 
 ## 模型选择
