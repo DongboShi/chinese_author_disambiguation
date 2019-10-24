@@ -51,12 +51,13 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 ### reference 和citation 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
-|ref1||||
+|ref1|||史冬波|
 
 ### journal 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
-|so1|Pucktada 2009|1 if in same so;<br />0 if not in same so|宁杰,李萌|
+|so1|自创|1 if in same so;<br />0 if not in same so|宁杰,李萌|
+|so1|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,局部idf|
 |so1|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,我提供全局idf|
 
 ### year 类
@@ -66,8 +67,15 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |year2|Pucktada 2009|0,if both are before 2008;<br />1,if one is before 2008 and one is after 2008;<br />2,if both are after 2008|宁杰，李萌|
 
 ### affiliation 类
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
 
 ### keywords 类
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
+|kw1|Pucktada 2009|# keywordA ∩ keywordB|刘宁杰、李萌|
+|kw2|Pucktada 2009|∑logidf(kw)|刘宁杰、李萌，局部idf|
+|kw3|Pucktada 2009|∑logidf(kw)|刘宁杰、李萌，全局idf|
 
 ### title 类
 
@@ -78,9 +86,11 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |title3|自创|∑ logidf(shared item),使用全局idf|李萌、宁杰、史冬波，待定是否加入|
 
 
-### 其他 类
+### 其他类
+doc2vec 是不是
 
 ## 模型选择
+
 理论上我们会尝试所有类型的模型
 
 xgboost
