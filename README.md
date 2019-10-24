@@ -51,7 +51,12 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 ### reference 和citation 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
-|ref1|||史冬波|
+|ref1|Schulz 2014|#pA ∩ RB + # pB ∩ RA||史冬波|
+|ref2|Schulz 2014|# RB ∩ # RA||史冬波|
+|ref3|自创|∑logidf(R)局部idf||史冬波|
+|ref4|Schulz 2014|#citingA ∩ citingB / min(#citingA,#citingB)||史冬波|
+|ref5|Schulz 2014|#citingA ∩ citingB / #citingA+#citingB||史冬波|
+
 
 ### journal 类
 | feature | reference | definition | 负责人|
@@ -69,6 +74,10 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 ### affiliation 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
+|aff1|Pucktada 2009| jaccard similarity #aff A ∩ affB / (#affA + affB)|宁杰、李萌|
+|aff2|Pucktada 2009| ∑ logidf(aff)局部idf|宁杰、李萌|
+|aff3|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
+|外国机构是否可以用一下||||
 
 ### keywords 类
 | feature | reference | definition | 负责人|
@@ -84,7 +93,6 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |title1|Pucktada 2009|# titleA ∩ titleB / (#titleA + #titleB)<br />可以使用stringdist包直接计算|李萌、宁杰|
 |title2|自创|∑ logidf(shared item),使用局部idf|李萌、宁杰|
 |title3|自创|∑ logidf(shared item),使用全局idf|李萌、宁杰、史冬波，待定是否加入|
-
 
 ### 其他类
 doc2vec
@@ -767,6 +775,7 @@ $$email_similarity = \left{
 作者: Zhao, Dangzhi; Strotmann, Andreas
 JOURNAL OF THE AMERICAN SOCIETY FOR INFORMATION SCIENCE AND TECHNOLOGY   卷: 62   期: 4   页: 654-676   出版年: APR 2011
 **涵谦**
+
 这篇文章是针对高度合作的干细胞研究领域，研究使用first-author counting，last-author counting，all-author counting这三种不同的方法会使得citation analysis（citation ranking，field mapping）产生什么不一样的结果。使用的消歧方法是基于Strot-mann et al. (2009)的一种自动消歧方法。
 
 21. **A boosted-trees method for name disambiguation**
