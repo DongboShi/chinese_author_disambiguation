@@ -39,8 +39,8 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |coauthor12|Pucktada 2009|# coauthorA ∩ coauthorB|史冬波|
 |coauthor21|Schulz 2014|# coauthorA ∩ coauthorB / min(#coauthorA,#coauthorB)|史冬波|
 |coauthor22|Schulz 2014|# coauthorA ∩ coauthorB / min(#coauthorA,#coauthorB)|史冬波|
-|coauthor31|Pucktada 2009|# coauthorA ∩ coauthorB / (#coauthorA + #coauthorB)|史冬波|
-|coauthor32|Pucktada 2009|# coauthorA ∩ coauthorB / (#coauthorA + #coauthorB)|史冬波|
+|coauthor31|Pucktada 2009|# coauthorA ∩ coauthorB / (#coauthorA + #coauthorB)<br />可以使用stringdist包直接计算|史冬波|
+|coauthor32|Pucktada 2009|# coauthorA ∩ coauthorB / (#coauthorA + #coauthorB)<br />可以使用stringdist包直接计算|史冬波|
 |coauthor41|Pucktada 2009|∑ IDF coauthor，使用局部的idf|史冬波|
 |coauthor42|Pucktada 2009|∑ IDF coauthor，使用局部的idf|史冬波|
 |coauthor51|Pucktada 2009|∑ IDF coauthor，全局idf|史冬波|
@@ -54,7 +54,9 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |ref1||||
 
 ### journal 类
-
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
+|so||||
 ### year 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
@@ -66,6 +68,13 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 ### keywords 类
 
 ### title 类
+
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
+|title1|Pucktada 2009|# titleA ∩ titleB / (#titleA + #titleB)<br />可以使用stringdist包直接计算|李萌、宁杰|
+|title2|自创|∑ idf(shared item),使用局部idf|李萌、宁杰|
+|title3|自创|∑ idf(shared item),使用全局idf|李萌、宁杰、史冬波，待定是否加入|
+
 
 ### 其他 类
 
