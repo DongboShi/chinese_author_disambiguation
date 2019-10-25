@@ -62,8 +62,8 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
 |so1|自创|1 if in same so;<br />0 if not in same so|宁杰,李萌|
-|so1|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,局部idf|
-|so1|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,我提供全局idf|
+|so2|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,局部idf|
+|so3|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,我提供全局idf|
 
 ### year 类
 | feature | reference | definition | 负责人|
