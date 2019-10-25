@@ -79,14 +79,15 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |aff3|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
 |外国机构是否可以用一下||||
 
-### keywords 类
+### keywords，field 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
 |kw1|Pucktada 2009|# keywordA ∩ keywordB|刘宁杰、李萌|
 |kw2|Pucktada 2009|∑logidf(kw)|刘宁杰、李萌，局部idf|
 |kw3|Pucktada 2009|∑logidf(kw)|刘宁杰、李萌，全局idf|
-
-### title 类
+|field1||# fieldA ∩ fieldB|刘宁杰、李萌|
+|field2||∑logidf(field)|刘宁杰、李萌，局部idf|
+|field3||∑logidf(field)|刘宁杰、李萌，全局idf|### title 类
 
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
