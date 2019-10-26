@@ -85,6 +85,8 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |aff22|Pucktada 2009| ∑ logidf(aff)局部idf|宁杰、李萌|
 |aff31|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
 |aff32|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
+|"/Users/zijiangred/changjiang/dataset/global/org1_tf.csv"||||
+|"/Users/zijiangred/changjiang/dataset/global/org2_tf.csv"||||
 
 |外国机构是否可以用一下||||
 
