@@ -72,11 +72,19 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |year2|Pucktada 2009|0,if both are before 2008;<br />1,if one is before 2008 and one is after 2008;<br />2,if both are after 2008|宁杰，李萌|
 
 ### affiliation 类
+首先把org1字段，也就是地址字段的第一个逗号之前的内容选出来作为affiliation
+
+然后后续做法可以分为两种，第一种是讲org1作为整体处理，第二种将org1按照空格拆开处理，都做一下feature
+
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
-|aff1|Pucktada 2009| jaccard similarity #aff A ∩ affB / (#affA + affB)|宁杰、李萌|
-|aff2|Pucktada 2009| ∑ logidf(aff)局部idf|宁杰、李萌|
-|aff3|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
+|aff11|Pucktada 2009| jaccard similarity #aff A ∩ affB / (#affA + affB)|宁杰、李萌|
+|aff12|Pucktada 2009| jaccard similarity #aff A ∩ affB / (#affA + affB)|宁杰、李萌|
+|aff21|Pucktada 2009| ∑ logidf(aff)局部idf|宁杰、李萌|
+|aff22|Pucktada 2009| ∑ logidf(aff)局部idf|宁杰、李萌|
+|aff31|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
+|aff32|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
+
 |外国机构是否可以用一下||||
 
 ### keywords，field 类
