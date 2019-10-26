@@ -94,7 +94,7 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |title1|Pucktada 2009|# titleA ∩ titleB / (#titleA + #titleB)<br />可以使用stringdist包直接计算|李萌、宁杰|
 |title2|自创|∑ logidf(shared item),使用局部idf|李萌、宁杰|
 |title3|自创|∑ logidf(shared item),使用全局idf|李萌、宁杰、史冬波，待定是否加入|
-
+|"/Users/zijiangred/changjiang/dataset/global/title_tf.csv"|全局tf位置|
 ### 其他类
 doc2vec
 
