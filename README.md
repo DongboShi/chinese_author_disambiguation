@@ -73,8 +73,9 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 
 ### affiliation 类
 首先把org1字段，也就是地址字段的第一个逗号之前的内容选出来作为affiliation
+其次org2+org1字段，也就是地址字段的第二个逗号之前的内容选出来作为affiliation
 
-然后后续做法可以分为两种，第一种是讲org1作为整体处理，第二种将org1按照空格拆开处理，都做一下feature
+然后后续做法可以分为两种，第一种是讲org1作为整体处理，第二种将org2处理，都做一下feature
 
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
