@@ -17,8 +17,8 @@ setwd("/Users/zijiangred/changjiang/dataset/pairorder")
 ##读入数据
 grandtruth <- fromJSON(file="/Users/zijiangred/changjiang/dataset/inputdata/exact_list.json",simplify=T)
 print("successfully load grandtruth data")
-##定义样本对顺序
 
+##定义样本对顺序
 makepair <- function(i,gt){
         gtpaper <- grandtruth[[i]][[2]]
         gtpaper1 <- gtpaper
@@ -46,23 +46,58 @@ makepair <- function(i,gt){
                 filter(paperA < paperB) %>%
                 select(paperA,paperB)
         pair3 <- anti_join(pair2,pair,by=c("paperA","paperB"))
-        pair$label <- 1
-        pair3$label <- 1
-        fullut <- unlist(list.select(papers,UT))
-        negpaper <- fullut[!fullut%in%gtpaper]
-        pair4 <- crossing(gtpaper,negpaper) %>%
-                rename(paperA = gtpaper, paperB=negpaper)
-        pair4$label <- 0
-        pair_final <- rbind(pair,pair3)
-        pair_final <- rbind(pair_final,pair4)
+        if(dim(pair)[1]>0){
+                pair$label <- 1
+                if(dim(pair3)[1]>0){
+                        pair3$label <- 1
+                        fullut <- unlist(list.select(papers,UT))
+                        negpaper <- fullut[!fullut%in%gtpaper]
+                        pair4 <- crossing(gtpaper,negpaper) %>%
+                                rename(paperA = gtpaper, paperB=negpaper)
+                        pair4$label <- 0
+                        pair_final <- rbind(pair,pair3)
+                        pair_final <- rbind(pair_final,pair4)
+                }else{
+                        fullut <- unlist(list.select(papers,UT))
+                        negpaper <- fullut[!fullut%in%gtpaper]
+                        pair4 <- crossing(gtpaper,negpaper) %>%
+                                rename(paperA = gtpaper, paperB=negpaper)
+                        pair4$label <- 0
+                        pair_final <- rbind(pair,pair4)
+                }
+        }else{
+                if(dim(pair3)[1]>0){
+                        pair3$label <- 1
+                        fullut <- unlist(list.select(papers,UT))
+                        negpaper <- fullut[!fullut%in%gtpaper]
+                        pair4 <- crossing(gtpaper,negpaper) %>%
+                                rename(paperA = gtpaper, paperB=negpaper)
+                        pair4$label <- 0
+                        pair_final <- rbind(pair,pair3)
+                        pair_final <- rbind(pair_final,pair4)
+                }else{
+                        fullut <- unlist(list.select(papers,UT))
+                        negpaper <- fullut[!fullut%in%gtpaper]
+                        pair4 <- crossing(gtpaper,negpaper) %>%
+                                rename(paperA = gtpaper, paperB=negpaper)
+                        pair4$label <- 0
+                        pair_final <- rbind(pair,pair4)
+                }
+        }
         if(paste0(i,"_pair.h5") %in% list.files()){
                 file.remove(paste0(i,"_pair.h5"))
         }
         if(paste0(i,"_label.h5") %in% list.files()){
                 file.remove(paste0(i,"_label.h5"))
         }
-        h5write(pair[c("paperA","paperB")],file=paste0(i,"_pair.h5"),name="pair")
-        h5write(pair[c("label")],file=paste0(i,"_label.h5"),name="label")
+        h5write(pair_final[c("paperA","paperB")],file=paste0(i,"_pair.h5"),name="pair")
+        h5write(pair_final[c("label")],file=paste0(i,"_label.h5"),name="label")
+}
+
+
+for(i in 162:length(grandtruth)){
+        makepair(i,grandtruth)
+        print(i)
 }
 mclapply(1:length(grandtruth),function(x) makepair(x,grandtruth),mc.cores=6)
 
