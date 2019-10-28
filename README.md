@@ -62,8 +62,8 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
 |so1|自创|1 if in same so;<br />0 if not in same so|宁杰,李萌|
-|so1|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,局部idf|
-|so1|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,我提供全局idf|
+|so2|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,局部idf|
+|so3|Pucktada 2009|logidf so;<br />0 if not in same so|宁杰,李萌,我提供全局idf|
 
 ### year 类
 | feature | reference | definition | 负责人|
@@ -72,31 +72,46 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 |year2|Pucktada 2009|0,if both are before 2008;<br />1,if one is before 2008 and one is after 2008;<br />2,if both are after 2008|宁杰，李萌|
 
 ### affiliation 类
+首先把org1字段，也就是地址字段的第一个逗号之前的内容选出来作为affiliation
+其次org2+org1字段，也就是地址字段的第二个逗号之前的内容选出来作为affiliation
+
+然后后续做法可以分为两种，第一种是讲org1作为整体处理，第二种将org2处理，都做一下feature
+
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
-|aff1|Pucktada 2009| jaccard similarity #aff A ∩ affB / (#affA + affB)|宁杰、李萌|
-|aff2|Pucktada 2009| ∑ logidf(aff)局部idf|宁杰、李萌|
-|aff3|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
+|aff11|Pucktada 2009| jaccard similarity #aff A ∩ affB / (#affA + affB)|宁杰、李萌|
+|aff12|Pucktada 2009| jaccard similarity #aff A ∩ affB / (#affA + affB)|宁杰、李萌|
+|aff21|Pucktada 2009| ∑ logidf(aff)局部idf|宁杰、李萌|
+|aff22|Pucktada 2009| ∑ logidf(aff)局部idf|宁杰、李萌|
+|aff31|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
+|aff32|Pucktada 2009|  ∑ logidf(aff)全局部idf|宁杰、李萌，史冬波提供idf|
+|"/Users/zijiangred/changjiang/dataset/global/org1_tf.csv"||||
+|"/Users/zijiangred/changjiang/dataset/global/org2_tf.csv"||||
+
 |外国机构是否可以用一下||||
 
-### keywords 类
+### keywords，field 类
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
 |kw1|Pucktada 2009|# keywordA ∩ keywordB|刘宁杰、李萌|
 |kw2|Pucktada 2009|∑logidf(kw)|刘宁杰、李萌，局部idf|
 |kw3|Pucktada 2009|∑logidf(kw)|刘宁杰、李萌，全局idf|
-
-### title 类
+|field1||# fieldA ∩ fieldB|刘宁杰、李萌|
+|field2||∑logidf(field)|刘宁杰、李萌，局部idf|
+|field3||∑logidf(field)|刘宁杰、李萌，全局idf|### title 类
 
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
 |title1|Pucktada 2009|# titleA ∩ titleB / (#titleA + #titleB)<br />可以使用stringdist包直接计算|李萌、宁杰|
 |title2|自创|∑ logidf(shared item),使用局部idf|李萌、宁杰|
 |title3|自创|∑ logidf(shared item),使用全局idf|李萌、宁杰、史冬波，待定是否加入|
-
+|"/Users/zijiangred/changjiang/dataset/global/title_tf.csv"|全局tf位置|
 ### 其他类
 doc2vec
 
+| feature | reference | definition | 负责人|
+| -----| ---- | ---- |----|
+|email||1,存在一个相同的email||史冬波|
 ## 模型选择
 
 理论上我们会尝试所有类型的模型
