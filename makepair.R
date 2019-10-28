@@ -18,6 +18,7 @@ setwd("/Users/zijiangred/changjiang/dataset/pairorder")
 grandtruth <- fromJSON(file="/Users/zijiangred/changjiang/dataset/inputdata/exact_list.json",simplify=T)
 print("successfully load grandtruth data")
 ##定义样本对顺序
+
 makepair <- function(i,gt){
         gtpaper <- grandtruth[[i]][[2]]
         gtpaper1 <- gtpaper
