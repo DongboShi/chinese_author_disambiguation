@@ -56,30 +56,32 @@ makepair <- function(i){
                 filter(paperA < paperB) %>%
                 select(paperA,paperB)
         pair3 <- anti_join(pair2,pair,by=c("paperA","paperB"))
+        
         # negative pairs
         fullut <- unlist(list.select(papers,UT))
         negpaper <- fullut[!fullut%in%gtpaper]
         pair4 <- crossing(gtpaper,negpaper) %>%
                 rename(paperA = gtpaper, paperB=negpaper)
+        pair5 <- anti_join(pair3,pair4,by=c("paperA","paperB"))
         pair4$label <- 0
         if(dim(pair)[1]>0){
                 pair$label <- 1
-                if(dim(pair3)[1]>0){
-                        pair3$label <- 1
-                        pair_final <- rbind(pair,pair3)
+                if(dim(pair5)[1]>0){
+                        pair5$label <- 1
+                        pair_final <- rbind(pair,pair5)
                         pair_final <- rbind(pair_final,pair4)
                 }else{
                         pair_final <- rbind(pair,pair4)
                 }
         }else{
-                if(dim(pair3)[1]>0){
-                        pair3$label <- 1
-                        pair_final <- rbind(pair3,pair4)
+                if(dim(pair5)[1]>0){
+                        pair5$label <- 1
+                        pair_final <- rbind(pair5,pair4)
                 }else{
                         pair_final <- pair4
                 }
         }
-        
+        pair_final <- pair_final %>% distinct()
         # export results
         if(paste0(id,"_pair.h5") %in% list.files()){
                 file.remove(paste0(id,"_pair.h5"))
@@ -87,13 +89,16 @@ makepair <- function(i){
         if(paste0(id,"_label.h5") %in% list.files()){
                 file.remove(paste0(id,"_label.h5"))
         }
+        
         h5write(pair_final[c("paperA","paperB")],file=paste0(id,"_pair.h5"),name="pair")
         h5write(pair_final[c("label")],file=paste0(id,"_label.h5"),name="label")
 }
-for(i in fl){
-        makepair(i)
+fl1<-fl[str_detect(fl,"_1")]
+
+for(i in 1:length(fl1)){
+        makepair(fl1[i])
         print(i)
 }
-mclapply(1:length(fl),makepair,mc.cores=3)
+mclapply(fl,makepair,mc.cores=3)
 
 
