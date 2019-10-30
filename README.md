@@ -69,7 +69,7 @@ coauthor这部分需要保留两种coauthor的名字形式：首先去掉名字�
 | feature | reference | definition | 负责人|
 | -----| ---- | ---- |----|
 |year1|Pucktada 2009|year dif|宁杰，李萌|
-|year2|Pucktada 2009|0,if both are before 2008;<br />1,if one is before 2008 and one is after 2008;<br />2,if both are after 2008|宁杰，李萌|
+|year2|Pucktada 2009|0,if both are before 2008;<br />1,if one is before 2008 and one is after 2008;<br />2,if both are after 2008;<br />3 ,one is NULL or both are NULL|宁杰，李萌|
 
 ### affiliation 类
 首先把org1字段，也就是地址字段的第一个逗号之前的内容选出来作为affiliation
