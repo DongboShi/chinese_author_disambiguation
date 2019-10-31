@@ -1,65 +1,77 @@
-library(rhdf5)
 library(dplyr)
 library(rjson)
+library(rhdf5)
 library(tidyr)
 library(rlist)
 library(parallel)
+rm(list=ls())
 setwd("/Users/Lenovo/Desktop/feature")
-ref_single<-c()
-ref_zong<-c()
-for(t in c(1,5)){
-  data <- fromJSON(file=paste0('CJ_t',".json"),simplify=T)
-  papers<-data$papers
-  for (n in 1:length(papers)){
-    ref_single<-papers[[n]][["Reference"]][[1]]
-    ref_zong<-c(ref_single,ref_zong)
+for (i in c(1,5)){#æ‹¿1å’Œ5è¿™ä¸¤ä¸ªäººå®éªŒ
+  pairorder <- distinct(h5read(file=paste0(i,"_pair.h5"),name="pair"))
+  data <- fromJSON(file=paste0("CJ_",i,".json"),simplify=T)
+  papers <- data$papers
+  reference<-data.frame()
+  for(k in 1:length(papers)){
+    ut <- papers[[k]]$UT
+    ref <- data[["papers"]][[k]]$Reference[[1]]
+    result<-data.frame()
+    if(length(ref)>0){
+      result <- data.frame(ut,stringsAsFactors = F)
+      result$ref <- list(ref)
+   }
+    reference <- rbind(reference,result)
   }
 }
+Ref <- unnest(reference,ref)
 
-for(t in c(1,5)){
-  pairorder_orig <- h5read(file=paste0(t,"_pair.h5"),name="pair")
-  data <- fromJSON(file=paste0('CJ_t',".json"),simplify=T)
-  papers<-data$papers
-  pairorder <- pairorder_orig
-  pairorder$ref1<-0
-  pairorder$ref2<-0
-  pairorder$ref3<-0
-  paperA<-pairorder$paperA
-  paperB<-pairorder$paperB
-#ref1:pA ¡É RB + pB ¡É RA
-  for(k in 1:dim(pairorder)[1]){
-    idf_sum<-0
-    paperB_k<-paperB[k]
-    paperA_k<-paperA[k]
-    paperB_ref<-data[["papers"]][[paperB_k]][["Reference"]][[1]]
-    paperA_ref<-data[["papers"]][[paperA_k]][["Reference"]][[1]]
-    if(paperA_k %in% paperB_ref){
-      a=1     #Èç¹ûAÔÚBµÄReferenceÀï£¬¾Í¼ÇÂ¼1
-    }else {
-      a=0
-    }
-    if(paperB_k %in% paperA_ref){
-      b=1    #Èç¹ûBÔÚAµÄReferenceÀï£¬¾Í¼ÇÂ¼1
-    }else {
-      b=0  
-    }
-    pairorder$ref1[k]<-a+b    #Èç¹ûAB»¥ÔÚ¶Ô·½µÄreferenceÀï£¬¾ÍÎª2£¬Ö»ÓĞÒ»ÆªÔÚ£¬Îª1£¬¶¼²»ÔÚ£¬Îª0
-#ref2£ºRB ¡É RA    
-    ref_jiao<-intersect(paperA_ref,paperB_ref)
-    pairorder$ref2[k]<-length(ref_jiao)  
-#ref3£º¡Ælogidf(R)¾Ö²¿idf    
-    if(length(ref_jiao)==0){
-      idf_sum<-0  #Ã»ÓĞshareµÄref£¬Ö±½Ó¼Ç0
-    }
-    else{
-      for(i in 1:length(ref_jiao)){
-        count_i<-which(ref_zong==ref_jiao[i])
-        idf_i<-log(length(ref_zong)/length(count_i))
-        idf_sum<-idf_sum+idf_i
-       }
-    }
-    pairorder$ref3[k]<-idf_sum
-  }
-  write.csv(pairorder,'sample.csv')
+for (i in c(1,5)){
+  pairorder <- h5read(file=paste0(i,"_pair.h5"),name="pair")
+  data <- fromJSON(file=paste0("CJ_",i,".json"),simplify=T)
+  papers <- data$papers
+  
+  #è®¡ç®—æ¯ä¸ªrefçš„log idf
+  part_ref3 <- count(Ref,ref) %>%
+    mutate(part_idf_ref = log(nrow(Ref)/(n)))
+  
+  #è®¡ç®—ä¸€å¯¹pairç›¸äº¤çš„refæ•°é‡
+  pairorderA <- left_join(pairorder,Ref,by=c('paperA'='ut'))
+  pairorderB <- left_join(pairorder,Ref,by=c('paperB'='ut'))
+  pairorderAB <- inner_join(pairorderA,pairorderB)
+  pairorderAB <- select(left_join(pairorderAB,part_ref3),-n)
+  pairorderAB <- group_by(pairorderAB,paperA,paperB) %>%
+    mutate(ref2=n())
+  
+  #è®¡ç®—sum log idf
+  feature <- group_by(pairorderAB,paperA,paperB) %>%
+  mutate(ref3=sum(part_idf_ref)) %>%
+  select(-ref,-part_idf_ref) %>%
+  distinct()
+  
+  Feature <- left_join(pairorder,feature)
+  Feature[is.na(Feature)] <- 0
+  
+  #è®¡ç®—ç¬¬ä¸€ä¸ªfeatureï¼ŒAåœ¨Bçš„refé‡Œï¼Œè®°1ï¼ŒBåœ¨Açš„refé‡Œï¼Œä¹Ÿè®°1ï¼ŒåŠ å’Œ
+  paperAinB <- mutate(pairorderB,AinB=ifelse(paperA==ref,1,0))
+  paperAinB[is.na(paperAinB)] <-0
+  paperAinB <-group_by(paperAinB,paperA,paperB) %>%
+    mutate(part_ref1=sum(AinB)) %>%
+    select(-ref,-AinB) %>%
+    distinct()
+
+  paperBinA <- mutate(pairorderA,BinA=ifelse(paperB==ref,1,0)) 
+  paperBinA[is.na(paperBinA)] <-0
+  paperBinA <-group_by(paperBinA,paperA,paperB) %>%
+    mutate(part_ref2=sum(BinA)) %>%
+    select(-ref,-BinA) %>%
+    distinct()
+
+  feature2 <- inner_join(paperAinB,paperBinA) %>%
+    mutate(ref1=part_ref1+part_ref2) %>%
+    select(-part_ref1,-part_ref2) %>%
+    distinct()
+
+  Ref_feature <- full_join(feature2,Feature)
+
+  write.csv(Ref_feature,'sample_',i,'.csv')  
 }
 
