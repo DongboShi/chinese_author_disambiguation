@@ -6,33 +6,28 @@ library(rlist)
 library(stringr)
 library(parallel)
 library(readr)
-# ptm <- proc.time()
-rm(list=ls())
+ptm <- proc.time()
+# rm(list=ls())
 setwd('D:/0LLLab/chinese_author_disambiguation')
 # setwd("/Users/birdstone/Documents/Data")
 # h5read(pair[c("paperA","paperB")],file=paste0("/Users/zijiangred/changjiang/dataset/pairorder/",
 #                                               i,"_pair.h5"),name="pair")
 files <- list.files(pattern = "json")
-part_focus_name <- 0
+part_focus_name <- c()
 for (i in 1:length(files)){
-    pairorder <- h5read(file=paste0(i,"_pair.h5"),name="pair")
-    # data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/",i,".json"),simplify=T)
     data <- fromJSON(file=paste0("CJ_",i,".json"),simplify=T)
     papers <- data$papers
-    # All ut affliation
-    FocusName <- data.frame()
+    FocusName <- c()
     for(k in 1:length(papers)){
-        ut <- papers[[k]]$UT
         name <- data[["papers"]][[k]][["FocusName"]]
-        result<-data.frame()
-        if(length(name)>0){
-            result <- data.frame(ut,stringsAsFactors = F)
-            result$FocusName <- name
-        }
-        FocusName <- rbind(FocusName,result)
+        FocusName <- c(FocusName,name)
     }
-    part_focus_name <- part_focus_name+nrow(FocusName)
+    part_focus_name <- c(part_focus_name,FocusName)
 }
+# make idf
+IDFlName <- as.data.frame(table(str_extract(part_focus_name,'\\S+'))) 
+colnames(IDFlName) <- c('lName','freq')
+IDFlName <- mutate(IDFlName,lName_idf = log(sum(freq)/freq))
 
 for (i in 1:length(files)){
     pairorder <- h5read(file=paste0(i,"_pair.h5"),name="pair")
@@ -68,14 +63,12 @@ for (i in 1:length(files)){
     write.csv(Feature_givenname,file=paste0('Feature_givenname_',i,'.csv'),row.names = F,na='')
     
     ############################################################
-    lName_count <- count(FocusName,lName) %>%
-        mutate(lName_idf = log(part_focus_name/n))
-    pairorderAB_A <- select(left_join(select(pairorderAB,paperA,paperB,lNameA,lNameB),lName_count,
-                                      by=c('lNameA'='lName')),-n)
+    pairorderAB_A <- select(left_join(select(pairorderAB,paperA,paperB,lNameA,lNameB),IDFlName,
+                                      by=c('lNameA'='lName')),-freq)
     colnames(pairorderAB_A) <- c('paperA','paperB','lNameA','lNameB','lName_idfA')
-    pairorderAB_AB <- select(left_join(pairorderAB_A,lName_count,by=c('lNameB'='lName')),-n)
+    pairorderAB_AB <- select(left_join(pairorderAB_A,IDFlName,by=c('lNameB'='lName')),-freq)
     colnames(pairorderAB_AB) <- c('paperA','paperB','lNameA','lNameB','lName_idfA','lName_idfB')
-    Feature_lName <- mutate(pairorderAB_AB,IDFlname=lName_idfA+lName_idfB)
+    Feature_lName <- mutate(pairorderAB_AB,IDF_lname=lName_idfA+lName_idfB)
     write.csv(Feature_lName,file=paste0('Feature_lName',i,'.csv'),row.names = F,na='')
    
      ############################################################
@@ -109,3 +102,5 @@ for (i in 1:length(files)){
 
     write.csv(Feature_authororder,file=paste0('Feature_authororder_',i,'.csv'),row.names = F,na ='')
 }
+
+proc.time()-ptm
