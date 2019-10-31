@@ -6,7 +6,6 @@ library(rlist)
 library(stringr)
 library(parallel)
 library(readr)
-# ptm <- proc.time()
 # rm(list=ls())
 setwd('D:/0LLLab/chinese_author_disambiguation')
 # setwd("/Users/birdstone/Documents/Data")
@@ -14,25 +13,26 @@ setwd('D:/0LLLab/chinese_author_disambiguation')
 #                                               i,"_pair.h5"),name="pair")
 
 files <- list.files(pattern = "json")
-part_Aff_num <- 0
+part_Aff <- c()
 for (i in 1:length(files)){
-    pairorder <- h5read(file=paste0(i,"_pair.h5"),name="pair")
     data <- fromJSON(file=paste0("CJ_",i,".json"),simplify=T)
     papers <- data$papers
-    aff <- data.frame()
+    aff <- c()
     for(k in 1:length(papers)){
-        ut <- papers[[k]]$UT
         afflication <- data[["papers"]][[k]]$Affiliations[[1]]
-        result<-data.frame()
-        if(length(afflication)>0){
-            result <- data.frame(ut,stringsAsFactors = F)
-            result$aff <- list(data[["papers"]][[k]]$Affiliations[[1]])
-        }
-        aff <- rbind(aff,result)
+        aff <- c(aff,afflication)
     }
-    AFF <- unnest(aff,aff)
-    part_Aff_num <- part_Aff_num+nrow(AFF)
+    part_Aff <- c(part_Aff,aff)
 }
+
+# make idf
+# calculate the partial idf
+part_aff1 <- as.data.frame(table(str_extract(unlist(part_Aff),'[^,]+(?=,)')))
+colnames(part_aff1) <- c('org1','freq')
+part_aff1 <- mutate(part_aff1,part_idf_aff1 = log(sum(freq)/freq),org1=tolower(org1)) 
+part_aff2 <- as.data.frame(table(str_extract(unlist(part_Aff),'([^,]+,[^,]+)(?=,)')))
+colnames(part_aff2) <- c('org2','freq')
+part_aff2 <- mutate(part_aff2,part_idf_aff2 = log(sum(freq)/freq),org2=tolower(org2)) 
 # calculate the global idf
 GlobalAFF1 <- read_csv('org1_tf.csv')
 GlobalAFF1_sum <- sum(GlobalAFF1$frequency)
@@ -40,6 +40,7 @@ GlobalAFF1 <- mutate(GlobalAFF1,idf_aff1 = log(GlobalAFF1_sum/frequency))
 GlobalAFF2 <- read_csv('org2_tf.csv') #read.csv 太慢了
 GlobalAFF2_sum <- sum(GlobalAFF2$frequency)
 GlobalAFF2 <- mutate(GlobalAFF2,idf_aff2 = log(GlobalAFF2_sum/frequency))
+
 
 for (i in 1:length(files)){
     pairorder <- h5read(file=paste0(i,"_pair.h5"),name="pair")
@@ -79,14 +80,7 @@ for (i in 1:length(files)){
     AFF <- left_join(AFF,ogr_length)
     
     ############################################################
-    # make idf
-    # calculate the partial idf
-    part_aff1 <- count(AFF,org1) %>%
-        mutate(part_idf_aff1 = log(part_Aff_num/n))
-    
-    part_aff2 <- count(AFF,org2) %>%
-        mutate(part_idf_aff2 = log(part_Aff_num/n))
-    
+
     # match info on paper
     pairorderA <- left_join(pairorder,AFF,by=c('paperA'='ut'))
     colnames(pairorderA) <- c("paperA","paperB","aff","org1","org2","org1_countA",
@@ -98,7 +92,7 @@ for (i in 1:length(files)){
     pairorderA_pairorderB_intersectorg1 <- inner_join(select(pairorderA,-aff,-org2),
                                                       select(pairorderB,-aff,-org2)) %>% distinct() 
     pairorderA_pairorderB_intersectorg1 <- select(left_join(pairorderA_pairorderB_intersectorg1,
-                                                            part_aff1),-n,-org2_countA,-org2_countB)
+                                                            part_aff1),-freq,-org2_countA,-org2_countB)
     pairorderA_pairorderB_intersectorg1 <- select(left_join(pairorderA_pairorderB_intersectorg1,
                                                             GlobalAFF1,by=c('org1'='term')),-frequency)
     pairorderA_pairorderB_intersectorg1 <- mutate(pairorderA_pairorderB_intersectorg1,
@@ -109,7 +103,7 @@ for (i in 1:length(files)){
     pairorderA_pairorderB_intersectorg2 <- inner_join(select(pairorderA,-aff,-org1),
                                                       select(pairorderB,-aff,-org1)) %>% distinct() 
     pairorderA_pairorderB_intersectorg2 <- select(left_join(pairorderA_pairorderB_intersectorg2,
-                                                            part_aff2),-n,-org1_countA,-org1_countB)
+                                                            part_aff2),-freq,-org1_countA,-org1_countB)
     pairorderA_pairorderB_intersectorg2 <- select(left_join(pairorderA_pairorderB_intersectorg2,
                                                             GlobalAFF2,by=c('org2'='term')),-frequency)
     pairorderA_pairorderB_intersectorg2 <- mutate(pairorderA_pairorderB_intersectorg2,
@@ -131,3 +125,4 @@ for (i in 1:length(files)){
     Feature_aff <- select(Feature_aff,paperA,paperB,aff11,aff12,aff21,aff22,aff31,aff32)
     write.csv(Feature_aff,paste0('Feature_aff_',i,'.csv'),row.names=F)
 }
+
