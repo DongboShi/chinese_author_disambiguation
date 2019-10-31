@@ -1,19 +1,18 @@
+ptm = proc.time()
 library(rhdf5)
 library(dplyr)
 library(rjson)
 library(tidyr)
 library(readr)
-library(rlist)
 library(stringr)
 library(parallel)
 
-ptm = proc.time()
 setwd("C:/Users/liuningjie/Desktop/chinese/data")
 file = list.files()
 setwd("C:/Users/liuningjie/Desktop/chinese")
 #做词袋,局部
 key_corpus <- c()
-keyword_corpus <- function(j){
+keyword_corpus <- function(){
     for (j in 1:length(file)){
         i = str_split(file[j],'\\.')
         i <- unlist(i)[1]
@@ -40,6 +39,7 @@ keyword_corpus <- function(j){
     return(key_tf_part)
 }
 key_tf_part <- keyword_corpus()
+key_tf_global <- read_csv(file="./global/kw_tf.csv")
 
 keyword <- function(j){
     i = str_split(file[j],'\\.')
@@ -49,7 +49,6 @@ keyword <- function(j){
     data <- fromJSON(file=paste0('./data/',file[j]),simplify=T)
     pairorder_orig <- h5read(file=(paste0('./pair/',i,"_pair.h5")),name="pair")
     #全局
-    key_tf_global <- read_csv(file="./part/key_tf_part.csv")
     papers <- data$papers
     keywords <- data.frame()
     for(k in 1:length(papers)){
@@ -91,8 +90,7 @@ keyword <- function(j){
                 match(paperB,pairorder_orig$paperB))
     pairorder[is.na(pairorder)] <- 0
     write.csv(pairorder,file=paste0("./feature/keyword_",i,".csv"), row.names = F)
-    return(pairorder)
 }
-ccc <- lapply(1:length(file),keyword)
+lapply(1:length(file),keyword)
 proc.time() - ptm 
     

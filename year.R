@@ -1,3 +1,4 @@
+ptm = proc.time()
 #BiocManager::install("time")
 library(rhdf5)
 library(dplyr)
@@ -6,7 +7,6 @@ library(tidyr)
 library(stringr)
 library(parallel)
 
-ptm = proc.time()
 setwd("C:/Users/liuningjie/Desktop/chinese/data")
 file = list.files()
 setwd("C:/Users/liuningjie/Desktop/chinese")

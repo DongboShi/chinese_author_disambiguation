@@ -1,19 +1,18 @@
+ptm = proc.time()
 library(rhdf5)
 library(dplyr)
 library(rjson)
 library(tidyr)
 library(readr)
-library(rlist)
 library(stringr)
 library(parallel)
 
-ptm = proc.time()
 setwd("C:/Users/liuningjie/Desktop/chinese/data")
 file = list.files()
 setwd("C:/Users/liuningjie/Desktop/chinese")
 #做词袋,局部
 fie_corpus <- c()
-field_corpus <- function(j){
+field_corpus <- function(){
     for (j in 1:length(file)){
         i = str_split(file[j],'\\.')
         i <- unlist(i)[1]
@@ -36,6 +35,7 @@ field_corpus <- function(j){
     return(fie_tf_part)
 }
 fie_tf_part <- field_corpus()
+fie_tf_global <- read_csv(file="./global/field_tf.csv")
 
 field <- function(j){
     i = str_split(file[j],'\\.')
@@ -45,7 +45,6 @@ field <- function(j){
     data <- fromJSON(file=paste0('./data/',file[j]),simplify=T)
     pairorder_orig <- h5read(file=(paste0('./pair/',i,"_pair.h5")),name="pair")
     #全局
-    fie_tf_global <- read_csv(file="./part/fie_tf_part.csv")
     papers <- data$papers
     fields <- data.frame()
     for(k in 1:length(papers)){
@@ -81,9 +80,9 @@ field <- function(j){
     pairorder <- pairorder %>%
         arrange(match(paperA,pairorder_orig$paperA),
                 match(paperB,pairorder_orig$paperB))
-    write.csv(pairorder,file=paste0("./feature/field_",i,".csv"), row.names = F)
     pairorder[is.na(pairorder)] <- 0
-    return(pairorder)
+    write.csv(pairorder,file=paste0("./feature/field_",i,".csv"), row.names = F)
+    
 }
 lapply(1:length(file),field)
 proc.time() - ptm
