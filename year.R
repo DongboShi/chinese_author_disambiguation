@@ -3,7 +3,6 @@ library(rhdf5)
 library(dplyr)
 library(rjson)
 library(tidyr)
-library(rlist)
 library(stringr)
 library(parallel)
 
@@ -49,6 +48,7 @@ year <- function(j){
                 match(paperB,pairorder_orig$paperB))
     write.csv(pairorder,file=paste0("./feature/year_",i,".csv"), row.names = F)
 }
+
 lapply(1:length(file),year)
 proc.time() - ptm    
     
