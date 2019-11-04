@@ -6,16 +6,15 @@ library(rlist)
 library(stringr)
 library(parallel)
 library(readr)
-# rm(list=ls())
-setwd('D:/0LLLab/chinese_author_disambiguation')
-# setwd("/Users/birdstone/Documents/Data")
-# h5read(pair[c("paperA","paperB")],file=paste0("/Users/zijiangred/changjiang/dataset/pairorder/",
-#                                               i,"_pair.h5"),name="pair")
 
-files <- list.files(pattern = "json")
+# /(ㄒoㄒ)/~~写文件名不要换行，路径会报错 
+
+files <- list.files(path='/Users/zijiangred/changjiang/dataset/inputdata',pattern='CJ_')
+id <- sort(as.numeric(str_extract(files,'[0-9]+')))
+
 part_Aff <- c()
-for (i in 1:length(files)){
-    data <- fromJSON(file=paste0("CJ_",i,".json"),simplify=T)
+for (i in id){
+    data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/CJ_",i,".json"),simplify=T)
     papers <- data$papers
     aff <- c()
     for(k in 1:length(papers)){
@@ -23,29 +22,37 @@ for (i in 1:length(files)){
         aff <- c(aff,afflication)
     }
     part_Aff <- c(part_Aff,aff)
+    save.image('/Users/zijiangred/changjiang/dataset/feature/part_Aff.RData')
+    print(i)
 }
 
 # make idf
 # calculate the partial idf
-part_aff1 <- as.data.frame(table(str_extract(unlist(part_Aff),'[^,]+(?=,)')))
+part_aff1 <- as.data.frame(table(str_extract(tolower(unlist(part_Aff)),'[^,]+(?=,)')))
 colnames(part_aff1) <- c('org1','freq')
-part_aff1 <- mutate(part_aff1,part_idf_aff1 = log(sum(freq)/freq),org1=tolower(org1)) 
-part_aff2 <- as.data.frame(table(str_extract(unlist(part_Aff),'([^,]+,[^,]+)(?=,)')))
+part_aff1 <- mutate(part_aff1,part_idf_aff1 = log(sum(freq)/freq))
+write.csv(part_aff1,file='/Users/zijiangred/changjiang/dataset/feature/org1_idf.csv',row.names = F,na ='')
+part_aff2 <- as.data.frame(table(str_extract(tolower(unlist(part_Aff)),'([^,]+,[^,]+)(?=,)')))
 colnames(part_aff2) <- c('org2','freq')
-part_aff2 <- mutate(part_aff2,part_idf_aff2 = log(sum(freq)/freq),org2=tolower(org2)) 
+part_aff2 <- mutate(part_aff2,part_idf_aff2 = log(sum(freq)/freq))
+write.csv(part_aff2,file='/Users/zijiangred/changjiang/dataset/feature/org2_idf.csv',row.names = F,na ='')
+
+# part_aff1 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/org1_idf.csv')
+# part_aff2 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/org2_idf.csv')
+
 # calculate the global idf
-GlobalAFF1 <- read_csv('org1_tf.csv')
+GlobalAFF1 <- read_csv('/Users/zijiangred/changjiang/dataset/global/org1_tf.csv')
 GlobalAFF1_sum <- sum(GlobalAFF1$frequency)
 GlobalAFF1 <- mutate(GlobalAFF1,idf_aff1 = log(GlobalAFF1_sum/frequency))
-GlobalAFF2 <- read_csv('org2_tf.csv') #read.csv 太慢了
+GlobalAFF2 <- read_csv('/Users/zijiangred/changjiang/dataset/global/org2_tf.csv') #read.csv 太慢了
 GlobalAFF2_sum <- sum(GlobalAFF2$frequency)
 GlobalAFF2 <- mutate(GlobalAFF2,idf_aff2 = log(GlobalAFF2_sum/frequency))
 
 
-for (i in 1:length(files)){
-    pairorder <- h5read(file=paste0(i,"_pair.h5"),name="pair")
+for (i in id){
+    pairorder <- h5read(file=paste0("/Users/zijiangred/changjiang/dataset/pairorder/",i,"_pair.h5"),name="pair")
     # data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/",i,".json"),simplify=T)
-    data <- fromJSON(file=paste0("CJ_",i,".json"),simplify=T)
+    data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/CJ_",i,".json"),simplify=T)
     papers <- data$papers
     # All ut affliation
     aff <- data.frame()
@@ -123,6 +130,7 @@ for (i in 1:length(files)){
     Feature_aff <- left_join(pairorder,pairorder_Aff)
     Feature_aff[is.na(Feature_aff)] <- 0
     Feature_aff <- select(Feature_aff,paperA,paperB,aff11,aff12,aff21,aff22,aff31,aff32)
-    write.csv(Feature_aff,paste0('Feature_aff_',i,'.csv'),row.names=F)
+    write.csv(Feature_aff,paste0('/Users/zijiangred/changjiang/dataset/feature/Feature_aff/Feature_aff_',i,'.csv'),row.names=F,na ='')
+    print(i)
 }
 
