@@ -59,6 +59,9 @@ tmp2 <- itemaff2_2 %>%
 
 org1 <- c(itemaff$org1,tmp1$org1,tmp2$org1)
 org2 <- c(itemaff$org2,tmp1$org2,tmp2$org2)
+org1 <- tolower(org1)
+org2 <- tolower(org2)
+
 org1_tf <- data.frame(unlist(table(org1)))
 names(org1_tf) <- c("term","frequency")
 write.csv(org1_tf,file="/Users/zijiangred/changjiang/dataset/global/org1_tf.csv",row.names = F)
@@ -172,6 +175,52 @@ insertkw <- function(i){
 for(i in 1:dim(kw_wide_origin)[1]){
         insertkw(i)
         print(i)}
+
+
+#---------------------------------------------------------
+##coauthor
+#---------------------------------------------------------
+itemauthor1 <- dbGetQuery(con,"select * from itemauthor")
+itemauthor2 <- dbGetQuery(con,"select ut_char, fullname from thomson.itemauthor group by ut_char,fullname")
+# 106982288
+tmp <- itemauthor1 %>% 
+        select(ut_char,fullname) %>% 
+        distinct() %>%
+        mutate(familyname = str_sub(fullname,1,str_locate(fullname,",")[,1]-1),
+               givenname = str_sub(fullname,str_locate(fullname,",")[,1]+1),
+               familyname = tolower(familyname),
+               givenname = tolower(givenname),
+               givenname = str_remove_all(givenname,"-|\\.|`| "),
+               givennameshort = str_sub(givenname,1,1),
+               fullname=paste(familyname,givenname,sep=","),
+               fullnameshort=paste(familyname,givennameshort,sep=","))
+rm(itemauthor1)
+
+tmp2 <- itemauthor2 %>%
+        select(ut_char,fullname) %>% 
+        distinct() %>%
+        mutate(familyname = str_sub(fullname,1,str_locate(fullname,",")[,1]-1),
+               givenname = str_sub(fullname,str_locate(fullname,",")[,1]+1),
+               familyname = tolower(familyname),
+               givenname = tolower(givenname),
+               givenname = str_remove_all(givenname,"-|\\.|`| "),
+               givennameshort = str_sub(givenname,1,1),
+               fullname=paste(familyname,givenname,sep=","),
+               fullnameshort=paste(familyname,givennameshort,sep=","))
+rm(itemauthor2)
+fullname <- c(tmp$fullname,tmp2$fullname)
+fullname_tf <- data.frame(unlist(table(fullname)))
+names(fullname_tf) <- c("term","frequency")
+
+
+fullnameshort <- c(tmp$fullnameshort,tmp2$fullnameshort)
+fullnameshort_tf <- data.frame(unlist(table(fullnameshort)))
+names(fullnameshort_tf) <- c("term","frequency")
+
+write.csv(fullname_tf,file="/Users/zijiangred/changjiang/dataset/global/fullname_tf.csv",row.names = F)
+write.csv(fullnameshort_tf,file="/Users/zijiangred/changjiang/dataset/global/fullnameshort_tf.csv",row.names = F)
+
+
 
 
 

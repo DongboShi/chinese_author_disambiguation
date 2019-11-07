@@ -1,16 +1,33 @@
 library(dplyr)
 library(rjson)
 library(rhdf5)
+library(stringr)
 library(tidyr)
 library(rlist)
 library(parallel)
-rm(list=ls())
-setwd("/Users/Lenovo/Desktop/feature")
-for (i in c(1,5)){#拿1和5这两个人实验
-  pairorder <- distinct(h5read(file=paste0(i,"_pair.h5"),name="pair"))
-  data <- fromJSON(file=paste0("CJ_",i,".json"),simplify=T)
+files <- list.files(path='/Users/zijiangred/changjiang/dataset/inputdata',pattern='CJ_')
+id <- sort(as.numeric(str_extract(files,'[0-9]+')))
+Reference <- c()
+for (i in id){
+  data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/CJ_",i,".json"),simplify=T)
   papers <- data$papers
-  reference<-data.frame()
+  reference <- c()
+  for(k in 1:length(papers)){
+    ref <- data[["papers"]][[k]]$Reference[[1]]
+    reference <- c(reference,ref)
+  }
+  Reference<-c(Reference,reference) 
+}
+#计算每个ref的log idf
+part_ref3 <- as.data.frame(table(unlist(Reference)))
+colnames(part_ref3) <- c('ref','freq')
+part_ref3 <- mutate(part_ref3,part_idf_ref = log(sum(freq)/freq))
+
+for (i in id){
+  pairorder <- h5read(file=paste0("/Users/zijiangred/changjiang/dataset/pairorder/",i,"_pair.h5"),name="pair")
+  data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/CJ_",i,".json"),simplify=T)
+  papers <- data$papers
+  ref_1 <- data.frame()
   for(k in 1:length(papers)){
     ut <- papers[[k]]$UT
     ref <- data[["papers"]][[k]]$Reference[[1]]
@@ -18,29 +35,19 @@ for (i in c(1,5)){#拿1和5这两个人实验
     if(length(ref)>0){
       result <- data.frame(ut,stringsAsFactors = F)
       result$ref <- list(ref)
-   }
-    reference <- rbind(reference,result)
-  }
-}
-Ref <- unnest(reference,ref)
-
-for (i in c(1,5)){
-  pairorder <- h5read(file=paste0(i,"_pair.h5"),name="pair")
-  data <- fromJSON(file=paste0("CJ_",i,".json"),simplify=T)
-  papers <- data$papers
-  
-  #计算每个ref的log idf
-  part_ref3 <- count(Ref,ref) %>%
-    mutate(part_idf_ref = log(nrow(Ref)/(n)))
+    }
+    ref_1 <- rbind(ref_1,result)
+  }  
+  Ref <- unnest(ref_1,ref)
   
   #计算一对pair相交的ref数量
   pairorderA <- left_join(pairorder,Ref,by=c('paperA'='ut'))
   pairorderB <- left_join(pairorder,Ref,by=c('paperB'='ut'))
   pairorderAB <- inner_join(pairorderA,pairorderB)
-  pairorderAB <- select(left_join(pairorderAB,part_ref3),-n)
+  pairorderAB <- select(left_join(pairorderAB,part_ref3),-freq)
   pairorderAB <- group_by(pairorderAB,paperA,paperB) %>%
     mutate(ref2=n())
-  
+ 
   #计算sum log idf
   feature <- group_by(pairorderAB,paperA,paperB) %>%
   mutate(ref3=sum(part_idf_ref)) %>%
@@ -72,6 +79,6 @@ for (i in c(1,5)){
 
   Ref_feature <- full_join(feature2,Feature)
 
-  write.csv(Ref_feature,'sample_',i,'.csv')  
+  write.csv(Ref_feature,file=paste0('/Users/zijiangred/changjiang/dataset/feature/Feature_ref/feature_ref_',i,'.csv'),row.names=F,na='')  
+  print(i) 
 }
-
