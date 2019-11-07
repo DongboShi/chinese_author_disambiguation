@@ -76,7 +76,7 @@ GlobalAFF1 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/feature_Aff
 GlobalAFF2 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/feature_Aff/GlobalAFF2.csv')
 
 for (i in id){
-    airorder <- h5read(file=paste0("/Users/zijiangred/changjiang/dataset/pairorder/",i,"_pair.h5"),name="pair")
+    pairorder <- h5read(file=paste0("/Users/zijiangred/changjiang/dataset/pairorder/",i,"_pair.h5"),name="pair")
     data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/CJ_",i,".json"),simplify=T)
     papers <- data$papers
     # All ut affliation
