@@ -861,5 +861,7 @@ pi,pj是否出现在对方的参考文献中
 处理list对象的工具
 https://renkun-ken.github.io/rlist/
 
+## feature selection
+采用author类 year类 affiliation类 coauthor类 field类来进行消歧
 
 
