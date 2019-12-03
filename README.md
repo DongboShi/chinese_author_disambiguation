@@ -155,10 +155,9 @@ h5write(author1,file="author1.h5",name="feature")
 
 #### 使用cv的聚类方法
 1. 通过模型预测出每一对pair之间的similarity
-2. 通过dbscan聚类
-3. 通过cv vote出最符合cv特征的一个cluster0
-4. 定义超参数$\beta_{1}$，计算cluster0内部的node i的$max(similarity)\_{i}$, 当 $max(similarity)_{i} < \beta_{1}$时，从cluster0中提出剔除i；形成cluster1
-5. 定义超参数$\beta_{2}$，计算cluster1之外的节点与cluster1内建点的max(similarity), 当$max(similarity)_{j} > \beta_{2}$时，讲j加入cluster1，迭代最终形成cluster2
+2. 通过cv vote出最符合cv特征的一个cluster0
+3. 定义超参数$\beta_{1}$，计算cluster0内部的node i的$max(similarity)\_{i}$, 当 $max(similarity)_{i} < \beta_{1}$时，从cluster0中提出剔除i；形成cluster1
+4. 定义超参数$\beta_{2}$，计算cluster1之外的节点与cluster1内建点的max(similarity), 当$max(similarity)_{j} > \beta_{2}$时，讲j加入cluster1，迭代最终形成cluster2
 
 通过cluster2，计算聚类的结果。
 同时调beta1，beta2以及dbscan的参数
@@ -861,5 +860,7 @@ pi,pj是否出现在对方的参考文献中
 处理list对象的工具
 https://renkun-ken.github.io/rlist/
 
+## feature selection
+采用author类 year类 affiliation类 coauthor类 field类来进行消歧
 
 

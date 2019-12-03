@@ -6,12 +6,14 @@ library(rlist)
 library(parallel)
 library(stringr)
 rm(list = ls())
-setwd("/Users/zijiangred/changjiang/dataset/feature")
+path <- "/Users/zijiangred/changjiang/dataset"
+path <- "/home/stonebird/cad"
+setwd(paste0(path,"/feature"))
 
 # function to make coauthor dataframe
 makecadf <- function(j,fl){
         i <- fl[j]
-        data <- fromJSON(file = paste0("/Users/zijiangred/changjiang/dataset/inputdata/",i),simplify = T)
+        data <- fromJSON(file = paste0(path,"/inputdata/",i),simplify = T)
         papers <- data$papers
         coauthors <- data.frame()
         tmp <- list.map(papers,Coauthors)
@@ -56,7 +58,7 @@ maketfidf <- function(df){
 }
 
 makepair <- function(i,fl){
-        data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/",fl[i]),simplify=T)
+        data <- fromJSON(file=paste0(path,"/inputdata/",fl[i]),simplify=T)
         papers <- data$papers
         paperut <- names(papers)
         paperut1 <- paperut
@@ -65,7 +67,32 @@ makepair <- function(i,fl){
                 filter(paperA < paperB)
         return(pair)
 }
+#make local item frequency
 
+# create feature
+# import the global and local idf 
+fullname_tf <- read.csv(paste0(path,"/global/fullname_tf.csv"),stringsAsFactors = F)
+fullnameshort_tf <- read.csv(paste0(path,"/global/fullnameshort_tf.csv"),stringsAsFactors = F)
+coauthor_tf_local<- read.csv(paste0(path,"/global/coauthor_tf_local.csv"),stringsAsFactors = F)
+coauthor_short_tf_local <- read.csv(paste0(path,"/global/coauthor_short_tf_local.csv"),stringsAsFactors = F)
+
+fullname_tf <- maketfidf(fullname_tf)
+fullnameshort_tf <- maketfidf(fullnameshort_tf)
+coauthor_tf_local <- maketfidf(coauthor_tf_local)
+coauthor_short_tf_local <- maketfidf(coauthor_short_tf_local)
+
+fullname_tf <- fullname_tf %>% select(term, frequency, tfidf)
+fullnameshort_tf <- fullnameshort_tf %>% select(term, frequency, tfidf)
+coauthor_tf_local <- coauthor_tf_local %>% select(term, frequency, tfidf)
+coauthor_short_tf_local <- coauthor_short_tf_local %>% select(term, frequency, tfidf)
+
+# make features
+
+#换到大内存机器完成这部分代码
+fl <- list.files(path = paste0(path,"/inputdata"))
+fl <- fl[str_detect(fl,"json")]
+
+#############
 mkid <- function(ut,df){
         v <- 1:dim(df[df$ut == ut,])[1]
         return(v)
@@ -101,20 +128,20 @@ mkcoauthorpair <- function(df,fullname_tf,coauthor_tf_local){
         df_1 <- union(df_11, df_12)
         df11 <- data.frame()
         
-        for(k in seq(1,length(unique(df_1$ut)),500)){
-                tmp <- df_1[df_1$ut %in% unique(df_1$ut)[k:(k+499)],]
+        for(k in seq(1,length(unique(df_1$ut)),1000)){
+                tmp <- df_1[df_1$ut %in% unique(df_1$ut)[k:(k+999)],]
                 df11_tmp <- inner_join(tmp[c("ut","fullname","fullname_match")],
-                                       df_1[c("ut","fullname","fullname_match")],
-                                       by=c("fullname","fullname_match")) %>%
+                                             df_1[c("ut","fullname","fullname_match")],
+                                             by=c("fullname","fullname_match")) %>%
                         rename(paperA = ut.x, paperB = ut.y) %>%
                         filter(paperA < paperB) %>%
                         group_by(paperA,paperB)
                 df11_tmp <- inner_join(df11_tmp,fullname_tf[c("term","tfidf")],
-                                       by = c("fullname"="term")) %>%
+                                             by = c("fullname"="term")) %>%
                         rename(global_tfidf=tfidf)
                 
                 df11_tmp <- inner_join(df11_tmp,coauthor_tf_local[c("term","tfidf")],
-                                       by = c("fullname"="term")) %>%
+                                             by = c("fullname"="term")) %>%
                         rename(local_tfidf=tfidf)
                 
                 df11_tmp <- df11_tmp %>%
@@ -148,21 +175,21 @@ mkcoauthorpair_short <- function(df, fullnameshort_tf, coauthor_short_tf_local){
         
         df_2 <- union(df_21, df_22)
         df22 <- data.frame()
-        for(k in seq(1,length(unique(df_2$ut)),500)){
-                tmp <- df_2[df_2$ut %in% unique(df_2$ut)[k:(k+499)],]
+        for(k in seq(1,length(unique(df_2$ut)),1000)){
+                tmp <- df_2[df_2$ut %in% unique(df_2$ut)[k:(k+999)],]
                 df22_tmp <- inner_join(tmp[c("ut","fullnameshort","fullnameshort_match")],
-                                       df_2[c("ut","fullnameshort","fullnameshort_match")],
-                                       by=c("fullnameshort","fullnameshort_match")) %>%
+                                             df_2[c("ut","fullnameshort","fullnameshort_match")],
+                                             by=c("fullnameshort","fullnameshort_match")) %>%
                         rename(paperA = ut.x, paperB = ut.y) %>%
                         filter(paperA < paperB) %>%
                         group_by(paperA,paperB)
                 gc()
                 df22_tmp <- inner_join(df22_tmp,fullnameshort_tf[c("term","tfidf")],
-                                       by = c("fullnameshort"="term")) %>%
+                                             by = c("fullnameshort"="term")) %>%
                         rename(global_tfidf=tfidf)
                 
                 df22_tmp <- inner_join(df22_tmp,coauthor_short_tf_local[c("term","tfidf")],
-                                       by = c("fullnameshort"="term")) %>%
+                                             by = c("fullnameshort"="term")) %>%
                         rename(local_tfidf=tfidf)
                 
                 df22_tmp <- df22_tmp %>%
@@ -204,29 +231,8 @@ addfeature <- function(pairorder){
                        coauthor31,coauthor32,coauthor41,coauthor42,coauthor51,coauthor52)
         return(pairorder)
 }
-# create feature
-# import the global and local idf 
-fullname_tf <- read.csv("/Users/zijiangred/changjiang/dataset/global/fullname_tf.csv",stringsAsFactors = F)
-fullnameshort_tf <- read.csv("/Users/zijiangred/changjiang/dataset/global/fullnameshort_tf.csv",stringsAsFactors = F)
-coauthor_tf_local<-read.csv("/Users/zijiangred/changjiang/dataset/global/coauthor_tf_local.csv",stringsAsFactors = F)
-coauthor_short_tf_local <- read.csv("/Users/zijiangred/changjiang/dataset/global/coauthor_short_tf_local.csv",stringsAsFactors = F)
 
-fullname_tf <- maketfidf(fullname_tf)
-fullnameshort_tf <- maketfidf(fullnameshort_tf)
-coauthor_tf_local <- maketfidf(coauthor_tf_local)
-coauthor_short_tf_local <- maketfidf(coauthor_short_tf_local)
-
-fullname_tf <- fullname_tf %>% select(term, frequency, tfidf)
-fullnameshort_tf <- fullnameshort_tf %>% select(term, frequency, tfidf)
-coauthor_tf_local <- coauthor_tf_local %>% select(term, frequency, tfidf)
-coauthor_short_tf_local <- coauthor_short_tf_local %>% select(term, frequency, tfidf)
-
-
-#换到大内存机器完成这部分代码
-fl <- list.files(path = "/Users/zijiangred/changjiang/dataset/inputdata")
-fl <- fl[str_detect(fl,"json")]
-
-for(i in 201:300){
+for(i in 1:50){
         id <- str_extract(fl[i],pattern = "[0-9]+")
         coauthors <- makecadf(i,fl)
         coauthors <- definename(coauthors)
@@ -243,7 +249,8 @@ for(i in 201:300){
                 summarise(n1=n())
         coauthor11 <- mkcoauthorpair(coauthors,fullname_tf,coauthor_tf_local)
         gc()
-        pairorder <- h5read(paste0("/Users/zijiangred/changjiang/dataset/pairorder/",id,"_pair.h5"),"pair")
+        pairorder <- makepair(i,fl)
+        #pairorder <- h5read(paste0("/Users/zijiangred/changjiang/dataset/pairorder/",id,"_pair.h5"),"pair")
         pairorder <- left_join(pairorder,coauthorn1,by=c("paperA"="ut")) %>%
                 rename(auA=n1)
         pairorder <- left_join(pairorder,coauthorn1,by=c("paperB"="ut")) %>%
@@ -258,7 +265,6 @@ for(i in 201:300){
         pairorder <- left_join(pairorder,coauthor22,by=c("paperA","paperB"))
         rm(coauthor22)
         pairorder <- addfeature(pairorder)
-        write.csv(pairorder,file = paste0("/Users/zijiangred/changjiang/dataset/feature/coauthor/coauthor_",id,".csv"),row.names = F)
+        write.csv(pairorder,file = paste0(path,"/feature/coauthor_fullpair/coauthor_",id,".csv"),row.names = F)
         print(i)
 }
-
