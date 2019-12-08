@@ -10,6 +10,7 @@ library(data.table)
 
 # /(ㄒoㄒ)/~~写文件名不要换行，路径会报错 
 
+# files <- list.files(path='/home/stonebird/cad/inputdata',pattern='CJ_')
 files <- list.files(path='/Users/zijiangred/changjiang/dataset/inputdata',pattern='CJ_')
 id <- sort(as.numeric(str_extract(files,'[0-9]+')))
 
@@ -45,6 +46,8 @@ id <- sort(as.numeric(str_extract(files,'[0-9]+')))
 # part_aff2 <- mutate(part_aff2,part_idf_aff2 = log(sum(freq)/freq))
 # write.csv(part_aff2,file='org2_idf.csv',row.names = F,na ='')
 
+# part_aff1 <- read_csv('/home/stonebird/cad/org1_idf.csv')
+# part_aff2 <- read_csv('/home/stonebird/cad/org2_idf.csv')
 part_aff1 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/org1_idf.csv')
 part_aff2 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/org2_idf.csv')
 
@@ -70,12 +73,16 @@ part_aff2 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/org2_idf.csv
 # GlobalAFF2_sum <- sum(GlobalAFF2$freq)
 # GlobalAFF2 <- mutate(GlobalAFF2,idf_aff2 = log(GlobalAFF2_sum/freq))
 # write.csv(GlobalAFF1,file='/Users/zijiangred/changjiang/dataset/feature/feature_Aff/GlobalAFF1.csv',row.names = F,na ='')
-# write.csv(GlobalAFF2,file='/Users/zijiangred/changjiang/dataset/feature/GlobalAFF2.csv',row.names = F,na ='')
+# write.csv(GlobalAFF2,file='/Users/zijiangred/changjianghtop/dataset/feature/GlobalAFF2.csv',row.names = F,na ='')
+# GlobalAFF1 <- read_csv('/home/stonebird/cad/GlobalAFF1.csv')
+# GlobalAFF2 <- read_csv('/home/stonebird/cad/GlobalAFF2.csv')
+
 GlobalAFF1 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/GlobalAFF1.csv')
 GlobalAFF2 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/GlobalAFF2.csv')
 
-for (i in id[id>5]){
+for (i in id){
     # pairorder <- h5read(file=paste0("/Users/zijiangred/changjiang/dataset/pairorder/",i,"_pair.h5"),name="pair")
+    # data <- fromJSON(file=paste0("/home/stonebird/cad/inputdata/CJ_",i,".json"),simplify=T)
     data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/CJ_",i,".json"),simplify=T)
     papers <- data$papers
     paperut <- names(papers) 
@@ -95,11 +102,11 @@ for (i in id[id>5]){
     AFF[is.na(AFF)==T] <- ''
     AFF <- mutate(AFF,org1 = address1,org2 = paste(address1,address2,sep=', ')) %>% 
         select(-address1,-address2)
-    AFF1 <- AFF %>%
-        group_by(ut) %>%
-        summarise(Org1=paste(org1,collapse='---'),Org2=paste(org2,collapse='---')) %>%
-        mutate(Org1 = str_split(Org1,'---'),Org2 = str_split(Org2,'---')) 
-    
+    # AFF1 <- AFF %>%
+    #     group_by(ut) %>%
+    #     summarise(Org1=paste(org1,collapse='---'),Org2=paste(org2,collapse='---')) %>%
+    #     mutate(Org1 = str_split(Org1,'---'),Org2 = str_split(Org2,'---')) 
+    # 
     org1_count <- group_by(AFF,ut,org1) %>%
         count()
     AFF <- left_join(AFF,org1_count)
@@ -109,29 +116,35 @@ for (i in id[id>5]){
     AFF <- left_join(AFF,org2_count)
     colnames(AFF) <- c("ut","aff","org1","org2","org1_count","org2_count")
     
+    rm(data)
+    rm(papers)
+    gc()
     ############################################################
     # calculate jaccard
-    pairA <- left_join(pairorder,AFF1,by=c('paperA'='ut'))
-    colnames(pairA) <- c('paperA','paperB','Org1_A','Org2_A')
-    pairA_B <- left_join(pairA,AFF1,by=c('paperB'='ut'))
-    colnames(pairA_B) <- c('paperA','paperB','Org1_A','Org2_A','Org1_B','Org2_B')
-    org1_jiao <- Map(intersect, pairA_B$Org1_A, pairA_B$Org1_B)
-    org1_bing <- Map(union, pairA_B$Org1_A, pairA_B$Org1_B)
-    aff11 <- sapply(1:length(org1_jiao), function(x) length(org1_jiao[[x]])/length(org1_bing[[x]])) %>%
-        as.data.frame()
-    org2_jiao <- Map(intersect, pairA_B$Org2_A, pairA_B$Org2_B)
-    org2_bing <- Map(union, pairA_B$Org2_A, pairA_B$Org2_B)
-    aff12 <- sapply(1:length(org2_jiao), function(x) length(org2_jiao[[x]])/length(org2_bing[[x]])) %>%
-        as.data.frame()
-    pairA_B <- cbind(pairA_B,aff11,aff12)
-    colnames(pairA_B) <- c("paperA","paperB","Org1_A","Org2_A","Org1_B","Org2_B","aff11","aff12")
-
+    # pairA <- left_join(pairorder,AFF1,by=c('paperA'='ut'))
+    # colnames(pairA) <- c('paperA','paperB','Org1_A','Org2_A')
+    # pairA_B <- left_join(pairA,AFF1,by=c('paperB'='ut'))
+    # colnames(pairA_B) <- c('paperA','paperB','Org1_A','Org2_A','Org1_B','Org2_B')
+    # org1_jiao <- Map(intersect, pairA_B$Org1_A, pairA_B$Org1_B)
+    # org1_bing <- Map(union, pairA_B$Org1_A, pairA_B$Org1_B)
+    # aff11 <- sapply(1:length(org1_jiao), function(x) length(org1_jiao[[x]])/length(org1_bing[[x]])) %>%
+    #     as.data.frame()
+    # org2_jiao <- Map(intersect, pairA_B$Org2_A, pairA_B$Org2_B)
+    # org2_bing <- Map(union, pairA_B$Org2_A, pairA_B$Org2_B)
+    # aff12 <- sapply(1:length(org2_jiao), function(x) length(org2_jiao[[x]])/length(org2_bing[[x]])) %>%
+    #     as.data.frame()
+    # pairA_B <- cbind(pairA_B,aff11,aff12)
+    # colnames(pairA_B) <- c("paperA","paperB","Org1_A","Org2_A","Org1_B","Org2_B","aff11","aff12")
+    
     # match info on paper    
     AFF_idf1 <- select(left_join(AFF,part_aff1),-freq)
     AFF_idf2 <- select(left_join(AFF_idf1,part_aff2),-freq) 
     AFF_idf3 <- select(left_join(AFF_idf2,GlobalAFF1),-freq)
     AFF_idf <- select(left_join(AFF_idf3,GlobalAFF2),-freq)
-    
+    rm(AFF_idf1)
+    rm(AFF_idf2)
+    rm(AFF_idf3)
+    gc()
     pairorder_org1A <- select(AFF_idf,ut,org1,org1_count,part_idf_aff1,idf_aff1)
     colnames(pairorder_org1A) <- c('paperA','org1','org1_countA','part_idf_aff1','idf_aff1')
     pairorder_org1B <- select(AFF_idf,ut,org1,org1_count)
@@ -141,7 +154,7 @@ for (i in id[id>5]){
     pairorderA_pairorderB_intersectorg1 <- mutate(pairorderA_pairorderB_intersectorg1,
                                                   org1_part_idf_aff1=part_idf_aff1*pmin(org1_countA,org1_countB),
                                                   org1_idf_aff1=idf_aff1*pmin(org1_countA,org1_countB))
-
+    
     pairorder_org2A <- select(AFF_idf,ut,org2,org2_count,part_idf_aff2,idf_aff2)
     colnames(pairorder_org2A) <- c('paperA','org2','org2_countA','part_idf_aff2','idf_aff2')
     pairorder_org2B <- select(AFF_idf,ut,org2,org2_count)
@@ -158,19 +171,17 @@ for (i in id[id>5]){
     
     pairorder_org2 <- group_by(pairorderA_pairorderB_intersectorg2,paperA,paperB) %>%
         summarise(aff22 = sum(org2_part_idf_aff2),aff32 = sum(org2_idf_aff2))
+    pairorder_Aff1 <- left_join(pairorder,pairorder_org1)
+    pairorder_Aff2 <- left_join(pairorder,pairorder_org2)
     
-    # pairorder_Aff1 <- left_join(pairorder,pairorder_org1)
-    # pairorder_Aff2 <- left_join(pairorder,pairorder_org2)
-    # pairorder_Aff <- left_join(pairorder_Aff1,pairorder_Aff2)
-    # Feature_aff <- left_join(pairorder,pairA_B)
-    # Feature_aff <- left_join(Feature_aff,pairorder_Aff)
-    Feature_aff <-cbind(pairorder_org1,select(pairorder_org2,-paperA,-paperB),select(pairA_B,-paperA,-paperB))
+    # Feature_aff <-cbind(pairorder_Aff1,select(pairorder_Aff2,-paperA,-paperB),select(pairA_B,-paperA,-paperB))
+    Feature_aff <-cbind(pairorder_Aff1,select(pairorder_Aff2,-paperA,-paperB))
     Feature_aff[is.na(Feature_aff)] <- 0
-    Feature_aff <- select(Feature_aff,paperA,paperB,aff11,aff12,aff21,aff22,aff31,aff32)
-    write.csv(Feature_aff,paste0('/Users/zijiangred/changjiang/dataset/Meng_feature/all_feature_aff/Feature_aff_',i,'.csv'),row.names=F,na ='')
+    Feature_aff <- select(Feature_aff,paperA,paperB,aff21,aff22,aff31,aff32)
+    # write.csv(Feature_aff,paste0('/home/stonebird/cad/feature/aff_full/Feature_aff_',i,'.csv'),row.names=F,na ='')
+    write.csv(Feature_aff,file=paste0('/Users/zijiangred/changjiang/dataset/Meng_feature/all_feature_aff/Feature_aff_',i,'.csv'),row.names = F,na ='')
     print(i)
 }
 # 
 # x = 'AGH Univ Sci & Technol, Fac Phys & Appl Comp Sci, Krakow, Poland'
 # str_sub(x,1,str_locate_all(x,",")[[1]][1,1]-1)
-
