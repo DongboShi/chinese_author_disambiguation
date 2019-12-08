@@ -101,20 +101,19 @@ for (i in id){
     AFF[AFF=='na'] <- '' 
     AFF[is.na(AFF)==T] <- ''
     AFF <- mutate(AFF,org1 = address1,org2 = paste(address1,address2,sep=', ')) %>% 
-        select(-address1,-address2)
+        select(-address1,-address2,-aff)
+    
+    AFF <- add_count(AFF,ut,org1,name='org1_count')   
+    AFF <- add_count(AFF,ut,org2,name='org2_count')   
+    
+    # AFF <- add_count(AFF,ut,name='org_count')   
+    
+    #  list交并算法过慢，舍弃
     # AFF1 <- AFF %>%
     #     group_by(ut) %>%
     #     summarise(Org1=paste(org1,collapse='---'),Org2=paste(org2,collapse='---')) %>%
     #     mutate(Org1 = str_split(Org1,'---'),Org2 = str_split(Org2,'---')) 
     # 
-    org1_count <- group_by(AFF,ut,org1) %>%
-        count()
-    AFF <- left_join(AFF,org1_count)
-    colnames(AFF) <- c("ut","aff","org1","org2","org1_count")
-    org2_count <- group_by(AFF,ut,org2) %>%
-        count()
-    AFF <- left_join(AFF,org2_count)
-    colnames(AFF) <- c("ut","aff","org1","org2","org1_count","org2_count")
     
     rm(data)
     rm(papers)
@@ -136,48 +135,67 @@ for (i in id){
     # pairA_B <- cbind(pairA_B,aff11,aff12)
     # colnames(pairA_B) <- c("paperA","paperB","Org1_A","Org2_A","Org1_B","Org2_B","aff11","aff12")
     
-    # match info on paper    
-    AFF_idf1 <- select(left_join(AFF,part_aff1),-freq)
-    AFF_idf2 <- select(left_join(AFF_idf1,part_aff2),-freq) 
-    AFF_idf3 <- select(left_join(AFF_idf2,GlobalAFF1),-freq)
-    AFF_idf <- select(left_join(AFF_idf3,GlobalAFF2),-freq)
-    rm(AFF_idf1)
-    rm(AFF_idf2)
-    rm(AFF_idf3)
-    gc()
-    pairorder_org1A <- select(AFF_idf,ut,org1,org1_count,part_idf_aff1,idf_aff1)
-    colnames(pairorder_org1A) <- c('paperA','org1','org1_countA','part_idf_aff1','idf_aff1')
-    pairorder_org1B <- select(AFF_idf,ut,org1,org1_count)
-    colnames(pairorder_org1B) <- c('paperB','org1','org1_countB')    
-    pairorderA_pairorderB_intersectorg1 <- inner_join(pairorder_org1A,pairorder_org1B) %>% distinct() %>%
+    # Org1  
+    AFF_org1 <- select(AFF,ut,org1,org1_count) %>%
+        left_join(part_aff1) %>%
+        select(-freq) %>%
+        left_join(GlobalAFF1) %>%
+        select(-freq) %>%
+        distinct()
+    AFF_org1 <- add_count(AFF_org1,ut,name='uni_org1_sum')
+    
+    pairorder_org1A <- AFF_org1
+    colnames(pairorder_org1A) <- c('paperA','org1','org1_countA','part_idf_aff1','idf_aff1','uni_org1_sumA')
+    pairorder_org1B <- select(AFF_org1,-part_idf_aff1,-idf_aff1)
+    colnames(pairorder_org1B) <- c('paperB','org1','org1_countB','uni_org1_sumB')    
+    pairorderA_pairorderB_intersectorg1 <- inner_join(pairorder_org1A,pairorder_org1B) %>%
         filter(paperA<paperB)
+    pairorderA_pairorderB_intersectorg1 <-add_count(pairorderA_pairorderB_intersectorg1,paperA,paperB,name='intersect_count')
+    # min is wrong, use pmin :https://dennisphdblog.wordpress.com/2009/07/24/r-command-of-the-week-pmax-and-pmin/
     pairorderA_pairorderB_intersectorg1 <- mutate(pairorderA_pairorderB_intersectorg1,
                                                   org1_part_idf_aff1=part_idf_aff1*pmin(org1_countA,org1_countB),
-                                                  org1_idf_aff1=idf_aff1*pmin(org1_countA,org1_countB))
+                                                  org1_idf_aff1=idf_aff1*pmin(org1_countA,org1_countB),
+                                                  aff11 = intersect_count/(uni_org1_sumA+uni_org1_sumB-intersect_count))
+    rm(pairorderA_pairorderB_intersectorg1)
+    gc()
+    # 实际上分组后aff11是一样的，min(aff11)只是为了能取出来
+    pairorder_org1 <- group_by(pairorderA_pairorderB_intersectorg1,paperA,paperB) %>%
+        summarise(aff11 = min(aff11),aff21 = sum(org1_part_idf_aff1),aff31 = sum(org1_idf_aff1))
     
-    pairorder_org2A <- select(AFF_idf,ut,org2,org2_count,part_idf_aff2,idf_aff2)
-    colnames(pairorder_org2A) <- c('paperA','org2','org2_countA','part_idf_aff2','idf_aff2')
-    pairorder_org2B <- select(AFF_idf,ut,org2,org2_count)
-    colnames(pairorder_org2B) <- c('paperB','org2','org2_countB')    
-    pairorderA_pairorderB_intersectorg2 <- inner_join(pairorder_org2A,pairorder_org2B) %>% distinct() %>%
+    # Org2  
+    AFF_org2 <- select(AFF,ut,org2,org2_count) %>%
+        left_join(part_aff2) %>%
+        select(-freq) %>%
+        left_join(GlobalAFF2) %>%
+        select(-freq) %>%
+        distinct()
+    AFF_org2 <- add_count(AFF_org2,ut,name='uni_org2_sum')
+    
+    pairorder_org2A <- AFF_org2
+    colnames(pairorder_org2A) <- c('paperA','org2','org2_countA','part_idf_aff2','idf_aff2','uni_org2_sumA')
+    pairorder_org2B <- select(AFF_org2,-part_idf_aff2,-idf_aff2)
+    colnames(pairorder_org2B) <- c('paperB','org2','org2_countB','uni_org2_sumB')    
+    pairorderA_pairorderB_intersectorg2 <- inner_join(pairorder_org2A,pairorder_org2B) %>%
         filter(paperA<paperB)
+    pairorderA_pairorderB_intersectorg2 <-add_count(pairorderA_pairorderB_intersectorg2,paperA,paperB,name='intersect_count')
+    # min is wrong, use pmin :https://dennisphdblog.wordpress.com/2009/07/24/r-command-of-the-week-pmax-and-pmin/
     pairorderA_pairorderB_intersectorg2 <- mutate(pairorderA_pairorderB_intersectorg2,
                                                   org2_part_idf_aff2=part_idf_aff2*pmin(org2_countA,org2_countB),
-                                                  org2_idf_aff2=idf_aff2*pmin(org2_countA,org2_countB))
-    
-    # min is wrong, use pmin :https://dennisphdblog.wordpress.com/2009/07/24/r-command-of-the-week-pmax-and-pmin/
-    pairorder_org1 <- group_by(pairorderA_pairorderB_intersectorg1,paperA,paperB) %>%
-        summarise(aff21 = sum(org1_part_idf_aff1),aff31 = sum(org1_idf_aff1))
-    
+                                                  org2_idf_aff2=idf_aff2*pmin(org2_countA,org2_countB),
+                                                  aff12 = intersect_count/(uni_org2_sumA+uni_org2_sumB-intersect_count))
+    rm(pairorderA_pairorderB_intersectorg2)
+    gc()
+    # 实际上分组后aff11是一样的，min(aff11)只是为了能取出来
     pairorder_org2 <- group_by(pairorderA_pairorderB_intersectorg2,paperA,paperB) %>%
-        summarise(aff22 = sum(org2_part_idf_aff2),aff32 = sum(org2_idf_aff2))
+        summarise(aff12= min(aff12),aff22 = sum(org2_part_idf_aff2),aff32 = sum(org2_idf_aff2))
+    WOS:000071005400018
+    # 设定顺序
     pairorder_Aff1 <- left_join(pairorder,pairorder_org1)
     pairorder_Aff2 <- left_join(pairorder,pairorder_org2)
     
     # Feature_aff <-cbind(pairorder_Aff1,select(pairorder_Aff2,-paperA,-paperB),select(pairA_B,-paperA,-paperB))
     Feature_aff <-cbind(pairorder_Aff1,select(pairorder_Aff2,-paperA,-paperB))
     Feature_aff[is.na(Feature_aff)] <- 0
-    Feature_aff <- select(Feature_aff,paperA,paperB,aff21,aff22,aff31,aff32)
     # write.csv(Feature_aff,paste0('/home/stonebird/cad/feature/aff_full/Feature_aff_',i,'.csv'),row.names=F,na ='')
     write.csv(Feature_aff,file=paste0('/Users/zijiangred/changjiang/dataset/Meng_feature/all_feature_aff/Feature_aff_',i,'.csv'),row.names = F,na ='')
     print(i)
