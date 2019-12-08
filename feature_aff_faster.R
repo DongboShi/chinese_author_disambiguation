@@ -80,7 +80,7 @@ part_aff2 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/org2_idf.csv
 GlobalAFF1 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/GlobalAFF1.csv')
 GlobalAFF2 <- read_csv('/Users/zijiangred/changjiang/dataset/feature/GlobalAFF2.csv')
 
-for (i in id){
+for (i in id[id>149]){
     # pairorder <- h5read(file=paste0("/Users/zijiangred/changjiang/dataset/pairorder/",i,"_pair.h5"),name="pair")
     # data <- fromJSON(file=paste0("/home/stonebird/cad/inputdata/CJ_",i,".json"),simplify=T)
     data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/CJ_",i,".json"),simplify=T)
@@ -156,11 +156,11 @@ for (i in id){
                                                   org1_part_idf_aff1=part_idf_aff1*pmin(org1_countA,org1_countB),
                                                   org1_idf_aff1=idf_aff1*pmin(org1_countA,org1_countB),
                                                   aff11 = intersect_count/(uni_org1_sumA+uni_org1_sumB-intersect_count))
-    rm(pairorderA_pairorderB_intersectorg1)
-    gc()
     # 实际上分组后aff11是一样的，min(aff11)只是为了能取出来
     pairorder_org1 <- group_by(pairorderA_pairorderB_intersectorg1,paperA,paperB) %>%
         summarise(aff11 = min(aff11),aff21 = sum(org1_part_idf_aff1),aff31 = sum(org1_idf_aff1))
+    rm(pairorderA_pairorderB_intersectorg1)
+    gc()
     
     # Org2  
     AFF_org2 <- select(AFF,ut,org2,org2_count) %>%
@@ -183,12 +183,11 @@ for (i in id){
                                                   org2_part_idf_aff2=part_idf_aff2*pmin(org2_countA,org2_countB),
                                                   org2_idf_aff2=idf_aff2*pmin(org2_countA,org2_countB),
                                                   aff12 = intersect_count/(uni_org2_sumA+uni_org2_sumB-intersect_count))
-    rm(pairorderA_pairorderB_intersectorg2)
-    gc()
     # 实际上分组后aff11是一样的，min(aff11)只是为了能取出来
     pairorder_org2 <- group_by(pairorderA_pairorderB_intersectorg2,paperA,paperB) %>%
         summarise(aff12= min(aff12),aff22 = sum(org2_part_idf_aff2),aff32 = sum(org2_idf_aff2))
-    WOS:000071005400018
+    rm(pairorderA_pairorderB_intersectorg2)
+    gc()
     # 设定顺序
     pairorder_Aff1 <- left_join(pairorder,pairorder_org1)
     pairorder_Aff2 <- left_join(pairorder,pairorder_org2)
