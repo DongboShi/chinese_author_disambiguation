@@ -70,36 +70,47 @@ for (j in 1:length(id)){
     Author_infoB <- Author_info
     colnames(Author_infoB) <- c("paperB","FocusNameB","lNameB","fNameB","fullnameB","lastauthorB",
                                 "firstauthorB","lName_idfB")
-    Author_info_pair <- data.frame()
-    for(k in seq(1,length(Author_infoA$paperA),1000)){
-            tmp <- Author_infoA[k:(k+999),]
+    #Author_info_pair <- data.frame()
+    featur_author_list <- list()
+    
+    for(k in seq(1,length(Author_infoA$paperA),5000)){
+            m <- round(k/5000)+1
+            tmp <- Author_infoA[k:(k+4999),]
             result <- crossing(tmp,Author_infoB) %>%
                     filter(paperA < paperB) %>%
                     mutate(fullname = fullnameA + fullnameB)
-            Author_info_pair <- rbind(Author_info_pair,result)
+            result <- result %>%
+                    mutate(givenname = ifelse(fNameA!=fNameB & fullname==1,1,0)) %>%
+                    mutate(givenname = ifelse(fNameA==fNameB & fullname==0,2,givenname)) %>%
+                    mutate(givenname = ifelse(fNameA==fNameB & fullname==2,3,givenname),
+                           IDF_lname=lName_idfA+lName_idfB) %>%
+                    mutate(authororder = ifelse(firstauthorA==1 & firstauthorB==1,2,0)) %>%
+                    mutate(authororder = ifelse(lastauthorA ==1 & lastauthorB==1,1,authororder)) %>%
+                    mutate(authororder = ifelse(firstauthorA ==1 & lastauthorB==1,1,authororder)) %>%
+                    mutate(authororder = ifelse(lastauthorA ==1 & firstauthorB==1,1,authororder)) %>%
+                    select(paperA,paperB,givenname,IDF_lname,authororder)
+            featur_author_list[[m]] <- result
             rm(result)
             gc()
             print(k)
     } 
+    featur_author <- data.frame()
+    
+    for(k in 1:length(featur_author_list)){
+            featur_author <- rbind(featur_author,featur_author_list[[k]])
+            gc()
+            print(k)
+    }
+   
+    rm(featur_author_list)
     rm(Author_infoA)
     rm(Author_infoB)
     rm(Author_info)
     gc()
-    featur_author <- mutate(Author_info_pair,givenname = ifelse(fNameA!=fNameB & fullname==1,1,0)) %>%
-        mutate(givenname = ifelse(fNameA==fNameB & fullname==0,2,givenname)) %>%
-        mutate(givenname = ifelse(fNameA==fNameB & fullname==2,3,givenname),
-               IDF_lname=lName_idfA+lName_idfB) %>%
-        mutate(authororder = ifelse(firstauthorA==1 & firstauthorB==1,2,0)) %>%
-        mutate(authororder = ifelse(lastauthorA ==1 & lastauthorB==1,1,authororder)) %>%
-        mutate(authororder = ifelse(firstauthorA ==1 & lastauthorB==1,1,authororder)) %>%
-        mutate(authororder = ifelse(lastauthorA ==1 & firstauthorB==1,1,authororder)) %>%
-        select(paperA,paperB,givenname,IDF_lname,authororder)
-    rm(Author_info_pair)
-    gc()
     write.csv(featur_author,file=paste0('/home/stonebird/cad/feature/author_full/Feature_author_',i,'.csv'),row.names = F,na ='')
     # write.csv(featur_author,file=paste0('/Users/zijiangred/changjiang/dataset/Meng_feature/all_feature_author/Feature_authororder_',i,'.csv'),row.names = F,na ='')
     # }
-    print(i)
+    print(j)
 }
 
 # proc.time()-ptm
