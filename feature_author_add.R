@@ -8,6 +8,18 @@ library(parallel)
 library(readr)
 library(data.table)
 
+
+data_mk <- function(inputdata){
+        inputdata <- unlist(inputdata)
+        inputdata <- setDT(as.data.frame(inputdata), keep.rownames = 'ut')[]
+        inputdata <- mutate(inputdata,ut_plus=str_sub(ut,20),
+                            ut_plus=ifelse(ut_plus=='',1,ut_plus)) # 出现多个作者取第一个   
+        inputdata <- inputdata %>% 
+                filter(ut_plus==1) %>%
+                select(-ut_plus)
+        return(inputdata)
+}
+
 # ptm <- proc.time()
 # rm(list=ls())
 # setwd('D:/0LLLab/chinese_author_disambiguation')
@@ -17,28 +29,11 @@ id <- sort(as.numeric(str_extract(files,'[0-9]+')))
 files1 <- list.files(path='/home/stonebird/cad/feature/author_full') 
 id1 <- sort(as.numeric(str_extract(files1,'[0-9]+')))
 id <- id[!(id %in% id1)]
-# part_focus_name <- c()
-# for (i in id){
-#     data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/CJ_",i,".json"),simplify=T)
-#     papers <- data$papers
-#     FocusName <- c()
-#     for(k in 1:length(papers)){
-#         name <- data[["papers"]][[k]][["FocusName"]][1]
-#         FocusName <- c(FocusName,name)
-#     }
-#     part_focus_name <- c(part_focus_name,FocusName)
-#     print(i)
-# }
-# # make idf
-# IDFlName <- as.data.frame(table(str_extract(part_focus_name,'\\S+')))
-# colnames(IDFlName) <- c('lName','freq')
-# IDFlName <- mutate(IDFlName,lName_idf = log(sum(freq)/freq))
-# write.csv(IDFlName,file='/Users/zijiangred/changjiang/dataset/feature/IDFlName_idf.csv',row.names = F,na ='')
 
-IDFlName <- read.csv('/home/stonebird/cad/IDFlName_idf.csv')
-# IDFlName <- read.csv('/Users/zijiangred/changjiang/dataset/feature/IDFlName_idf.csv')
+IDFlName <- read.csv('/home/stonebird/cad/tf_file/IDFlName_idf.csv')
 
-for (i in id){
+for (j in 1:length(id)){
+    i <- id[j]
     data <- fromJSON(file=paste0("/home/stonebird/cad/inputdata/CJ_",i,".json"),simplify=T)
     # data <- fromJSON(file=paste0("/Users/zijiangred/changjiang/dataset/inputdata/CJ_",i,".json"),simplify=T)
     papers <- data$papers
@@ -46,19 +41,11 @@ for (i in id){
     inputdata1 <- list.map(papers,FocusName)
     inputdata2 <- list.map(papers,NumAuthors)
     inputdata3 <- list.map(papers,Focus_seq)
-    data_mk <- function(inputdata){
-        inputdata <- unlist(inputdata)
-        inputdata <- setDT(as.data.frame(inputdata), keep.rownames = 'ut')[]
-        inputdata <- mutate(inputdata,ut_plus=str_sub(ut,20),
-                            ut_plus=ifelse(ut_plus=='',1,ut_plus)) # 出现多个作者取第一个   
-        inputdata <- inputdata %>% 
-            filter(ut_plus==1) %>%
-            select(-ut_plus)
-        return(inputdata)
-    }
+    
     FocusName <- data_mk(inputdata1)
     NumAuthors <- data_mk(inputdata2)
     Focus_seq <- data_mk(inputdata3)
+    
     fullname_length <- max(str_length(data[["Names"]][[1]]))
     Author_info <- cbind(FocusName,NumAuthors[-1],Focus_seq[-1])
     colnames(Author_info) <- c('ut','FocusName','NumAuthors','Focus_seq')
@@ -66,7 +53,7 @@ for (i in id){
     Author_info <- mutate(Author_info,fullname=ifelse(str_length(FocusName)==fullname_length,1,0),
                           lastauthor = ifelse(Focus_seq==NumAuthors,1,0),
                           firstauthor = ifelse(Focus_seq==1,1,0))
-    Author_info <- left_join(Author_info,IDFlName) %>%
+    Author_info <- left_join(Author_info,IDFlName,by = "lName") %>%
         select(-c(NumAuthors,Focus_seq,freq))
     rm(data)
     rm(papers)
@@ -83,9 +70,17 @@ for (i in id){
     Author_infoB <- Author_info
     colnames(Author_infoB) <- c("paperB","FocusNameB","lNameB","fNameB","fullnameB","lastauthorB",
                                 "firstauthorB","lName_idfB")
-    Author_info_pair <- crossing(Author_infoA,Author_infoB) %>%
-        filter(paperA < paperB) %>%
-        mutate(fullname = fullnameA + fullnameB)
+    Author_info_pair <- data.frame()
+    for(k in seq(1,length(Author_infoA$paperA),1000)){
+            tmp <- Author_infoA[k:(k+999),]
+            result <- crossing(tmp,Author_infoB) %>%
+                    filter(paperA < paperB) %>%
+                    mutate(fullname = fullnameA + fullnameB)
+            Author_info_pair <- rbind(Author_info_pair,result)
+            rm(result)
+            gc()
+            print(k)
+    } 
     rm(Author_infoA)
     rm(Author_infoB)
     rm(Author_info)
