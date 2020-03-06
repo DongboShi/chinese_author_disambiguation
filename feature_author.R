@@ -51,7 +51,8 @@ for (i in id[id>102]){
                             ut_plus=ifelse(ut_plus=='',1,ut_plus)) # 出现多个作者取第一个   
         inputdata <- inputdata %>% 
             filter(ut_plus==1) %>%
-            select(-ut_plus)
+            select(-ut_plus) %>%
+            mutate(ut = str_sub(ut,1,19))
         return(inputdata)
          }
     FocusName <- data_mk(inputdata1)
